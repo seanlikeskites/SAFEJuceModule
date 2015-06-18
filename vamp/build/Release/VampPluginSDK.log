@@ -1,0 +1,18 @@
+﻿Build started 17/06/2015 14:21:11.
+     1>Project "C:\Users\id115387\Documents\SAFEJuceModule\vamp\build\VampPluginSDK.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.. /Zi /nologo /W2 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _LIB /D _USE_MATH_DEFINES /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt "..\src\vamp-sdk\PluginAdapter.cpp" "..\src\vamp-sdk\FFT.cpp" "..\src\vamp-sdk\RealTime.cpp"
+         PluginAdapter.cpp
+         FFT.cpp
+         RealTime.cpp
+         Generating Code...
+       Lib:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"Release\VampPluginSDK.lib" /NOLOGO Release\PluginAdapter.obj
+         Release\FFT.obj
+         Release\RealTime.obj
+         VampPluginSDK.vcxproj -> C:\Users\id115387\Documents\SAFEJuceModule\vamp\build\Release\VampPluginSDK.lib
+     1>Done Building Project "C:\Users\id115387\Documents\SAFEJuceModule\vamp\build\VampPluginSDK.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.22

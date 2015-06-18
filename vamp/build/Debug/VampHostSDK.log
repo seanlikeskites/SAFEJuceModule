@@ -1,0 +1,78 @@
+﻿Build started 17/06/2015 14:20:32.
+     1>Project "C:\Users\id115387\Documents\SAFEJuceModule\vamp\build\VampHostSDK.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.. /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _USE_MATH_DEFINES /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt "..\src\vamp-hostsdk\Files.cpp" "..\src\vamp-hostsdk\PluginBufferingAdapter.cpp" "..\src\vamp-hostsdk\PluginChannelAdapter.cpp" "..\src\vamp-hostsdk\PluginHostAdapter.cpp" "..\src\vamp-hostsdk\PluginInputDomainAdapter.cpp" "..\src\vamp-hostsdk\PluginLoader.cpp" "..\src\vamp-hostsdk\PluginSummarisingAdapter.cpp" "..\src\vamp-hostsdk\PluginWrapper.cpp" "..\src\vamp-hostsdk\RealTime.cpp" "..\src\vamp-hostsdk\host-c.cpp"
+         host-c.cpp
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\host-c.cpp(65): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strdup. See online help for details.
+                 d:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(245) : see declaration of 'strdup'
+         RealTime.cpp
+         PluginWrapper.cpp
+         PluginSummarisingAdapter.cpp
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginsummarisingadapter.cpp(363): warning C4244: 'argument' : conversion from 'const double' to 'float', possible loss of data
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginsummarisingadapter.cpp(364): warning C4244: 'argument' : conversion from 'const double' to 'float', possible loss of data
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginsummarisingadapter.cpp(378): warning C4244: 'argument' : conversion from 'double' to 'const float', possible loss of data
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginsummarisingadapter.cpp(807): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>d:\program files (x86)\microsoft visual studio 12.0\vc\include\vector(214): warning C4503: 'std::_Tree<std::_Tmap_traits<_Kty,_Ty,_Pr,_Alloc,false>>::_Insert_hint' : decorated name length exceeded, name was truncated
+                 with
+                 [
+                     _Kty=int
+         ,            _Ty=_VampHost::Vamp::HostExt::PluginSummarisingAdapter::Impl::SummarySegmentMap
+         ,            _Pr=std::less<int>
+         ,            _Alloc=std::allocator<std::pair<const int,_VampHost::Vamp::HostExt::PluginSummarisingAdapter::Impl::SummarySegmentMap>>
+                 ]
+     1>d:\program files (x86)\microsoft visual studio 12.0\vc\include\vector(214): warning C4503: 'std::_Tree<std::_Tmap_traits<_Kty,_Ty,_Pr,_Alloc,false>>::_Insert_at' : decorated name length exceeded, name was truncated
+                 with
+                 [
+                     _Kty=int
+         ,            _Ty=_VampHost::Vamp::HostExt::PluginSummarisingAdapter::Impl::SummarySegmentMap
+         ,            _Pr=std::less<int>
+         ,            _Alloc=std::allocator<std::pair<const int,_VampHost::Vamp::HostExt::PluginSummarisingAdapter::Impl::SummarySegmentMap>>
+                 ]
+     1>d:\program files (x86)\microsoft visual studio 12.0\vc\include\vector(214): warning C4503: 'std::_Tree<std::_Tmap_traits<_Kty,_Ty,_Pr,_Alloc,false>>::_Insert_nohint' : decorated name length exceeded, name was truncated
+                 with
+                 [
+                     _Kty=int
+         ,            _Ty=_VampHost::Vamp::HostExt::PluginSummarisingAdapter::Impl::SummarySegmentMap
+         ,            _Pr=std::less<int>
+         ,            _Alloc=std::allocator<std::pair<const int,_VampHost::Vamp::HostExt::PluginSummarisingAdapter::Impl::SummarySegmentMap>>
+                 ]
+         PluginLoader.cpp
+         PluginInputDomainAdapter.cpp
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\plugininputdomainadapter.cpp(515): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\plugininputdomainadapter.cpp(516): warning C4244: 'argument' : conversion from 'float' to 'unsigned int', possible loss of data
+         PluginHostAdapter.cpp
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginhostadapter.cpp(73): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files (x86)\microsoft visual studio 12.0\vc\include\stdlib.h(462) : see declaration of 'getenv'
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginhostadapter.cpp(90): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files (x86)\microsoft visual studio 12.0\vc\include\stdlib.h(462) : see declaration of 'getenv'
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginhostadapter.cpp(100): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files (x86)\microsoft visual studio 12.0\vc\include\stdlib.h(462) : see declaration of 'getenv'
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginhostadapter.cpp(210): warning C4800: 'const int' : forcing value to bool 'true' or 'false' (performance warning)
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginhostadapter.cpp(334): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginhostadapter.cpp(341): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginhostadapter.cpp(344): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginhostadapter.cpp(359): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginhostadapter.cpp(423): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\pluginhostadapter.cpp(430): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+         PluginChannelAdapter.cpp
+         PluginBufferingAdapter.cpp
+         Files.cpp
+     1>c:\users\id115387\documents\safejucemodule\vamp\src\vamp-hostsdk\files.cpp(250): warning C4800: 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
+         Generating Code...
+       Lib:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"Debug\VampHostSDK.lib" /NOLOGO Debug\Files.obj
+         Debug\PluginBufferingAdapter.obj
+         Debug\PluginChannelAdapter.obj
+         Debug\PluginHostAdapter.obj
+         Debug\PluginInputDomainAdapter.obj
+         Debug\PluginLoader.obj
+         Debug\PluginSummarisingAdapter.obj
+         Debug\PluginWrapper.obj
+         Debug\RealTime.obj
+         "Debug\host-c.obj"
+         VampHostSDK.vcxproj -> C:\Users\id115387\Documents\SAFEJuceModule\vamp\build\Debug\VampHostSDK.lib
+     1>Done Building Project "C:\Users\id115387\Documents\SAFEJuceModule\vamp\build\VampHostSDK.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:11.35
