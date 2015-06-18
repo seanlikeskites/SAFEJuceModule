@@ -10,6 +10,14 @@ project. This is a research project being participated in by:
 For more information on the project please visit our website at 
 http://semanticaudio.co.uk
 
+## Cloning
+When cloning this repository remember to use the --recursive option to 
+clone all the submodules, i.e.:
+
+```
+$ git clone --recursive https://github.com/seanlikeskites/SAFEJuceModule.git
+```
+
 ## Documentation
 To get started take a look at the example project 
 https://github.com/seanlikeskites/SAFEJuceModule/tree/master/Examples/SimpleDistortion.
