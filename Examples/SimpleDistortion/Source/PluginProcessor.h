@@ -3,6 +3,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+// We start by making a class which inherits SAFEAudioProcessor.
 class SimpleDistortionAudioProcessor  : public SAFEAudioProcessor
 {
 public:
@@ -22,6 +23,9 @@ public:
     bool hasEditor() const override;
 
 private:
+    // Declare some variables which will hold our parameter values
+    float drive, symmetry, gain;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleDistortionAudioProcessor)
 };
 
