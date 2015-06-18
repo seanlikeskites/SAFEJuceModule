@@ -166,13 +166,14 @@ String SimpleDistortionAudioProcessor::getPluginCode()
 
 bool SimpleDistortionAudioProcessor::hasEditor() const
 {
-    return false;
+    // The same as in a normal JUCE plug-in
+    return true;
 }
 
 AudioProcessorEditor* SimpleDistortionAudioProcessor::createEditor()
 {
-    return nullptr;
-    //return new SimpleDistortionAudioProcessorEditor (*this);
+    // The same as in a normal JUCE plug-in
+    return new SimpleDistortionAudioProcessorEditor (*this);
 }
 
 // This creates new instance of the plug-in..
