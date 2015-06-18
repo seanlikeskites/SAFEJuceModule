@@ -30,9 +30,6 @@ SAFEFeatureExtractor::SAFEFeatureExtractor()
 
     // get the vamp loader instance
     vampPluginLoader = VampPluginLoader::getInstance();
-
-	double jam = 0.0;
-    Logger::outputDebugString ("Test: " + doubleToString (jam / jam));
 }
 
 SAFEFeatureExtractor::~SAFEFeatureExtractor()
