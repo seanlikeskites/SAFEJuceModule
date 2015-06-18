@@ -1,0 +1,3 @@
+[submodule "LibXtract"]
+	path = LibXtract
+	url = https://github.com/seanlikeskites/LibXtract
