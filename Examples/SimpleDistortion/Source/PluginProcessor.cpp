@@ -2,6 +2,8 @@
 #include "PluginEditor.h"
 
 SimpleDistortionAudioProcessor::SimpleDistortionAudioProcessor()
+    : threshold (0.5),
+      negativeThreshold (-threshold)
 {
     // Add some parameters to the plug-in.
     //
@@ -11,9 +13,14 @@ SimpleDistortionAudioProcessor::SimpleDistortionAudioProcessor()
     //
     // addDBParameter() adds a new parameter whose values will be automatically
     // converted from a dB gain to a gain factor we can use in the processing block.
+    //
+    // Make sure you remember the order you added the parameters in
+    // so you can refer to them later. If you have used an enum to label 
+    // your parameters, like I did in this plug-in, make sure you add the
+    // parameters in the same order they appear in the enum.
     addDBParameter ("Drive", drive, 0, -20, 20, "dB");
     addParameter ("Symmetry", symmetry, 1, 0, 1);
-    addParameter ("Gain", gain, 0, -20, 20);
+    addDBParameter ("Gain", gain, 0, -20, 20);
 
     // Add some features to extract.
     //
@@ -59,12 +66,64 @@ void SimpleDistortionAudioProcessor::pluginPreparation (double sampleRate, int s
 
 void SimpleDistortionAudioProcessor::pluginProcessing (AudioSampleBuffer &buffer, MidiBuffer &midiMessages)
 {
+    // This function is equivalent to the standard JUCE plug-in
+    // processBlock(). Use it to do your plug-in's processing.
+    //
+    // Parameter values can be accessed using the variables passed
+    // to them by reference in the constructor.
+    
+    // Apply the gain in our drive variable.
+    // Note we do not need to convert from dB as we added it as a dB parameter.
+    buffer.applyGain (drive);
+
+    // Get info about the amount of audio we have been 
+    // given to process.
+    int numChannels = buffer.getNumChannels();
+    int numSamples = buffer.getNumSamples();
+
+    // Loop through each channel
+    for (int channel = 0; channel < numChannels; ++channel)
+    {
+        // Get a pointer to the current channel of audio.
+        float *audioData = buffer.getWritePointer (channel);
+
+        // Loop through the samples.
+        for (int sample = 0; sample < numSamples; ++sample)
+        {
+            // Clip the audio.
+            if (audioData [sample] > threshold)
+            {
+                audioData [sample] = threshold;
+            }
+            else if (audioData [sample] < negativeThreshold)
+            {
+                audioData [sample] = negativeThreshold;
+            }
+        }
+    }
+
+    // Apply the gain in our gain variable.
+    buffer.applyGain (gain);
 }
 
 void SimpleDistortionAudioProcessor::releaseResources()
 {
     // Use this function to release any resources you
     // may have aquired in pluginPreparation().
+}
+
+void SimpleDistortionAudioProcessor::parameterUpdateCalculations (int index)
+{
+    // This function is called whenever a parameter value is changed.
+    // Use it to do anything your plug-in needs to when parameters
+    // are changed.
+    //
+    // In this plug-in we need to update the negative threshold whenever 
+    // the symmetry changes.
+    if (index == ParamSymmetry)
+    {
+        negativeThreshold = -symmetry * threshold;
+    }
 }
     
 int SimpleDistortionAudioProcessor::getAnalysisFrameSize()
