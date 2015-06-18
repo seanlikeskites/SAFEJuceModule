@@ -1,0 +1,23 @@
+{
+  "id":             "SAFE_juce_module",
+  "name":           "Semantic Audio Feature Extraction",
+  "version":        "3.0.4",
+  "description":    "A module for creating SAFE plug-ins.",
+  "website":        "semanticaudio.co.uk",
+  "license":        "GPL",
+
+  "dependencies":   [ { "id": "juce_core",   "version": "matching" },
+                      { "id": "juce_audio_processors",   "version": "matching" } ],
+
+  "include":        "SAFE_juce_module.h",
+
+  "compile":        [ { "file": "SAFE_juce_module.cpp", "target": "! xcode" },
+                      { "file": "SAFE_juce_module.mm",  "target": "xcode" } ],
+
+  "browse":         [ "PluginUtils/*",
+                      "Filters/*",
+                      "LookAndFeel/*",
+                      "UIComponents/*",
+                      "Effects/*",
+                      "Analysis/*" ],
+}
