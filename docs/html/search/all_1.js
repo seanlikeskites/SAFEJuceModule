@@ -1,7 +1,7 @@
 var searchData=
 [
   ['acceptsmidi',['acceptsMidi',['../class_s_a_f_e_audio_processor.html#a19a5a78eaa9bd587d72df7e8d1915f39',1,'SAFEAudioProcessor']]],
-  ['adddbparameter',['addDBParameter',['../class_s_a_f_e_audio_processor.html#a5d0017449eda451781e5c2906bf72bda',1,'SAFEAudioProcessor']]],
+  ['adddbparameter',['addDBParameter',['../class_s_a_f_e_audio_processor.html#ad56f7d967c73594a2ed2bcbc7b6c9829',1,'SAFEAudioProcessor']]],
   ['addfeaturestoxmlelement',['addFeaturesToXmlElement',['../class_s_a_f_e_feature_extractor.html#ae969651a025d1c7380819e4fb8c305f7',1,'SAFEFeatureExtractor']]],
   ['addlibxtractfeature',['addLibXtractFeature',['../class_s_a_f_e_audio_processor.html#ab51a8db8a88f691e0ca6280cd02acf6b',1,'SAFEAudioProcessor::addLibXtractFeature()'],['../class_s_a_f_e_feature_extractor.html#a8354e058ba1d47b2e27c4528e1607212',1,'SAFEFeatureExtractor::addLibXtractFeature()']]],
   ['addlistener',['addListener',['../class_filter_graph.html#a17325f1414de6bfef8dfc166573e63e2',1,'FilterGraph::addListener()'],['../class_s_a_f_e_slider.html#aa278d6845153be038312655bd356953d',1,'SAFESlider::addListener()'],['../class_x_y_slider.html#a6d04908192769419c4a1d3e62ec86464',1,'XYSlider::addListener()']]],

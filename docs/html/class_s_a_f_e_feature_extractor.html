@@ -112,14 +112,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aec5caea275e3a789f7f92808bbbfb8f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise the feature extractor.  <a href="#aec5caea275e3a789f7f92808bbbfb8f1">More...</a><br /></td></tr>
 <tr class="separator:aec5caea275e3a789f7f92808bbbfb8f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8354e058ba1d47b2e27c4528e1607212"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_a_f_e_feature_extractor.html#a8354e058ba1d47b2e27c4528e1607212">addLibXtractFeature</a> (<a class="el" href="class_lib_xtract.html#a050aae44413205d1145f9442105e38d9">LibXtract::Feature</a> feature)</td></tr>
+<tr class="memdesc:a8354e058ba1d47b2e27c4528e1607212"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add libxtract features to extract from the audio.  <a href="#a8354e058ba1d47b2e27c4528e1607212">More...</a><br /></td></tr>
 <tr class="separator:a8354e058ba1d47b2e27c4528e1607212"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85c411140c75ea4f2a5be5e3eab22075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_a_f_e_feature_extractor.html#a85c411140c75ea4f2a5be5e3eab22075">addVampPlugin</a> (const String &amp;libraryName, const String &amp;pluginName)</td></tr>
+<tr class="memdesc:a85c411140c75ea4f2a5be5e3eab22075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add vamp plug-in to extract features from the audio.  <a href="#a85c411140c75ea4f2a5be5e3eab22075">More...</a><br /></td></tr>
 <tr class="separator:a85c411140c75ea4f2a5be5e3eab22075"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7f9487778c67edb462ba90071c55785"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_a_f_e_feature_extractor.html#aa7f9487778c67edb462ba90071c55785">analyseAudio</a> (AudioSampleBuffer &amp;buffer)</td></tr>
+<tr class="memdesc:aa7f9487778c67edb462ba90071c55785"><td class="mdescLeft">&#160;</td><td class="mdescRight">Analyse a buffer of audio.  <a href="#aa7f9487778c67edb462ba90071c55785">More...</a><br /></td></tr>
 <tr class="separator:aa7f9487778c67edb462ba90071c55785"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc324703b160da5b9f3a32168b798595"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_a_f_e_feature_extractor.html#afc324703b160da5b9f3a32168b798595">setWindowingFunction</a> (void(*newWindowingFunction)(float *, int))</td></tr>
+<tr class="memdesc:afc324703b160da5b9f3a32168b798595"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a windowing function for use in the spectral analysis.  <a href="#afc324703b160da5b9f3a32168b798595">More...</a><br /></td></tr>
 <tr class="separator:afc324703b160da5b9f3a32168b798595"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae969651a025d1c7380819e4fb8c305f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_a_f_e_feature_extractor.html#ae969651a025d1c7380819e4fb8c305f7">addFeaturesToXmlElement</a> (XmlElement *element)</td></tr>
+<tr class="memdesc:ae969651a025d1c7380819e4fb8c305f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add the recorded audio features to an xml element.  <a href="#ae969651a025d1c7380819e4fb8c305f7">More...</a><br /></td></tr>
 <tr class="separator:ae969651a025d1c7380819e4fb8c305f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -223,6 +228,14 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Add libxtract features to extract from the audio. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">feature</td><td>the feature to extract </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="a85c411140c75ea4f2a5be5e3eab22075"></a>
@@ -249,6 +262,17 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Add vamp plug-in to extract features from the audio. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">libraryName</td><td>the name of the vamp plug-in library </td></tr>
+    <tr><td class="paramname">pluginName</td><td>the name of the plug-in in the library</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>The vamp plug-ins added should be installed in the standard vamp plug-in directory on the users system. If they are not on the system the features will not be extracted.</p>
+<p>Vamp plug-ins will be initialised to use their preferred block and step sizes. If they do not declare one they will use the sizes passed to <a class="el" href="class_s_a_f_e_feature_extractor.html#aec5caea275e3a789f7f92808bbbfb8f1" title="Initialise the feature extractor. ">initialise()</a>. </p>
+
 </div>
 </div>
 <a class="anchor" id="aa7f9487778c67edb462ba90071c55785"></a>
@@ -264,6 +288,15 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Analyse a buffer of audio. </p>
+<p>This function steps through the buffer of audio at the various frame and step sizes that are enabled. The features values are saved locally to the feature extractor object for reference later.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffer</td><td>the buffer of audio to analyse. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -281,6 +314,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Set a windowing function for use in the spectral analysis. </p>
+<p>During spectral analysis each frame of audio is passed to the windowing function to have a window applied. By default the spectral analysis uses a Hann window.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">newWindowingFunction</td><td>a pointer to the new windowing function to use - the function should apply a window function of length numSamples to the audioData </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="ae969651a025d1c7380819e4fb8c305f7"></a>
@@ -297,6 +339,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Add the recorded audio features to an xml element. </p>
+<p>This should be called after a call to <a class="el" href="class_s_a_f_e_feature_extractor.html#aa7f9487778c67edb462ba90071c55785" title="Analyse a buffer of audio. ">analyseAudio()</a> has returned. It will put all the audio features which were recorded into an xml element you pass it. </p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
@@ -305,7 +350,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 18 2015 09:37:14 for SAFE JUCE Module by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 19 2015 11:52:52 for SAFE JUCE Module by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>
