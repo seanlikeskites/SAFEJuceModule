@@ -4,6 +4,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 
+// Our editor inherits from SAFEAudioProcessorEditor
 class SimpleDistortionAudioProcessorEditor  : public SAFEAudioProcessorEditor
 {
 public:
@@ -15,6 +16,8 @@ public:
 
 private:
     SimpleDistortionAudioProcessor& processor;
+
+    Label title;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleDistortionAudioProcessorEditor)
 };
