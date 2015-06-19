@@ -340,7 +340,7 @@ protected:
      *
      *  The same as addParameter() but automatically sets convertDBToGainValue to true.
      */
-    void addDBParameter (String name, float& valueRef, float initialValue = 1, float minValue = 0, float maxValue = 1, String units = String::empty, float skewFactor = 1, double interpolationTimeInit = 100, float UIScaleFactor = 1);
+    void addDBParameter (String name, float& valueRef, float initialValue = 1, float minValue = 0, float maxValue = 1, String units = "dB", float skewFactor = 1, double interpolationTimeInit = 100, float UIScaleFactor = 1);
 
     //==========================================================================
     //      Add Features to Extract

@@ -41,6 +41,7 @@ SAFEAudioProcessorEditor::SAFEAudioProcessorEditor (SAFEAudioProcessor* ownerFil
         SAFESlider* currentSlider = sliders.add (new SAFESlider);
         
         SAFEParameter* currentParameter = parameters [n];
+        String currentName = currentParameter->getName();
         float currentMinValue = currentParameter->getMinValue();
         float currentMaxValue = currentParameter->getMaxValue();
         float currentDefaultValue = currentParameter->getDefaultValue();
@@ -48,6 +49,7 @@ SAFEAudioProcessorEditor::SAFEAudioProcessorEditor (SAFEAudioProcessor* ownerFil
         String currentUnits = currentParameter->getUnits();
         float currentUIScaleFactor = currentParameter->getUIScaleFactor();
 
+        currentSlider->setText (currentName);
         currentSlider->setRange (currentMinValue, currentMaxValue, 0.01);
         currentSlider->setDefaultValue (currentDefaultValue);
         currentSlider->setSkewFactor (currentSkewFactor);
@@ -58,10 +60,12 @@ SAFEAudioProcessorEditor::SAFEAudioProcessorEditor (SAFEAudioProcessor* ownerFil
 
 
     extraScreenXPos = extraScreenYPos = -400;
+    extraScreenWidth = infoScreen.getWidth();
+    extraScreenHeight = infoScreen.getHeight();
 
     // stuff for the meta data screen
     addAndMakeVisible (&metaDataScreen);
-    metaDataScreen.setBounds (extraScreenXPos, extraScreenYPos, 390, 295);
+    metaDataScreen.setTopLeftPosition (extraScreenXPos, extraScreenYPos);
     metaDataScreen.setAlwaysOnTop (true);
     metaDataScreen.setEnabled (false);
     metaDataScreen.submitButton.addListener (this);
@@ -71,7 +75,7 @@ SAFEAudioProcessorEditor::SAFEAudioProcessorEditor (SAFEAudioProcessor* ownerFil
 
     // stuff for the descriptor load screen
     addAndMakeVisible (&descriptorLoadScreen);
-    descriptorLoadScreen.setBounds (extraScreenXPos, extraScreenYPos, 390, 295);
+    descriptorLoadScreen.setTopLeftPosition (extraScreenXPos, extraScreenYPos);
     descriptorLoadScreen.setAlwaysOnTop (true);
     descriptorLoadScreen.setEnabled (false);
     descriptorLoadScreen.closeButton.addListener (this);
@@ -79,7 +83,7 @@ SAFEAudioProcessorEditor::SAFEAudioProcessorEditor (SAFEAudioProcessor* ownerFil
 
     // stuff for the info screen
     addAndMakeVisible (&infoScreen);
-    infoScreen.setBounds (extraScreenXPos, extraScreenYPos, 390, 295);
+    infoScreen.setTopLeftPosition (extraScreenXPos, extraScreenYPos);
     infoScreen.setAlwaysOnTop (true);
     infoScreen.setEnabled (false);
     infoScreen.closeButton.addListener (this);
@@ -421,7 +425,7 @@ void SAFEAudioProcessorEditor::hideExtraScreen (SAFEExtraScreen& screenToHide, E
     switch (direction)
     {
         case Left:
-            screenPosition.setX (-390);
+            screenPosition.setX (-screenPosition.getWidth());
             break;
 
         case Right:
@@ -429,7 +433,7 @@ void SAFEAudioProcessorEditor::hideExtraScreen (SAFEExtraScreen& screenToHide, E
             break;
 
         case Top:
-            screenPosition.setY (-295);
+            screenPosition.setY (-screenPosition.getHeight());
             break;
 
         case Bottom:

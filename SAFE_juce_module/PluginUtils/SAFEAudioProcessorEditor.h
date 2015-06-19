@@ -105,6 +105,9 @@ protected:
      */
     void setExtraScreenPosition (int x, int y);
 
+    int extraScreenWidth;
+    int extraScreenHeight;
+
 private:
     enum Timers
     {
