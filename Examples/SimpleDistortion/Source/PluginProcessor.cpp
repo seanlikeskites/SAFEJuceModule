@@ -18,7 +18,7 @@ SimpleDistortionAudioProcessor::SimpleDistortionAudioProcessor()
     // so you can refer to them later. If you have used an enum to label 
     // your parameters, like I did in this plug-in, make sure you add the
     // parameters in the same order they appear in the enum.
-    addDBParameter ("Drive", drive, 0, -20, 20, "dB");
+    addDBParameter ("Drive", drive, 0, -20, 20);
     addParameter ("Symmetry", symmetry, 1, 0, 1);
     addDBParameter ("Gain", gain, 0, -20, 20);
 
