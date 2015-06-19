@@ -263,6 +263,8 @@ void SAFEFeatureExtractor::analyseAudio (AudioSampleBuffer &buffer)
     float **audioData = buffer.getArrayOfWritePointers();
 
     resetVampPlugins();
+    clearLibXtractFeatures();
+    clearVampFeatures();
 
     for (int i = 0; i < analysisConfigurations.size(); ++i)
     {
@@ -1069,6 +1071,17 @@ void SAFEFeatureExtractor::addLibXtractFeaturesToList (int timeStamp)
     }
 }
 
+void SAFEFeatureExtractor::clearLibXtractFeatures()
+{
+    for (int i = 0; i < libXtractFeatureValues.size(); ++i)
+    {
+        for (int channel = 0; channel < numChannels; ++channel)
+        {
+            libXtractFeatureValues [i]->featureValues.getReference (channel).clear();
+        }
+    }
+}
+
 void SAFEFeatureExtractor::initialiseVampPlugins()
 {
     vampPlugins.clear();
@@ -1276,4 +1289,17 @@ bool SAFEFeatureExtractor::getVampPluginFeatureTimeAndDuration (AudioFeature &ne
     }
 
     return false;
+}
+
+void SAFEFeatureExtractor::clearVampFeatures()
+{
+    for (int i = 0; i < vampPlugins.size(); ++i)
+    {
+        VampPluginConfiguration *currentPlugin = vampPlugins [i];
+
+        for (int feature = 0; feature < currentPlugin->featureValues.size(); ++feature)
+        {
+            currentPlugin->featureValues.getReference (feature).clear();
+        }
+    }
 }

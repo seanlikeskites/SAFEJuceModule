@@ -51,12 +51,37 @@ public:
     //==========================================================================
     //      Add Features
     //==========================================================================
+    /** Add libxtract features to extract from the audio.
+     * 
+     *  @param feature  the feature to extract
+     */
     void addLibXtractFeature (LibXtract::Feature feature);
+
+    /** Add vamp plug-in to extract features from the audio.
+     * 
+     *  @param libraryName  the name of the vamp plug-in library
+     *  @param pluginName   the name of the plug-in in the library
+     *
+     *  The vamp plug-ins added should be installed in the standard vamp
+     *  plug-in directory on the users system. If they are not on the system the features
+     *  will not be extracted.
+     *
+     *  Vamp plug-ins will be initialised to use their preferred block and step sizes.
+     *  If they do not declare one they will use the sizes passed to initialise().
+     */
     void addVampPlugin (const String &libraryName, const String &pluginName);
 
     //==========================================================================
     //      Analyse Audio
     //==========================================================================
+    /** Analyse a buffer of audio.
+     *
+     *  @param buffer  the buffer of audio to analyse.
+     *
+     *  This function steps through the buffer of audio at the various
+     *  frame and step sizes that are enabled. The features values are saved locally
+     *  to the feature extractor object for reference later.
+     */
     void analyseAudio (AudioSampleBuffer &buffer);
     void setWindowingFunction (void (*newWindowingFunction) (float*, int));
     void addFeaturesToXmlElement (XmlElement *element);
@@ -128,6 +153,7 @@ private:
     void calculateLibXtractSpectra();
     void calculateLibXtractFeatures (const AudioSampleBuffer &frame);
     void addLibXtractFeaturesToList (int timeStamp);
+    void clearLibXtractFeatures();
 
     //==========================================================================
     //      vamp stuff
@@ -155,9 +181,11 @@ private:
                                               const VampOutputDescriptor &output,
                                               const VampFeature &feature,
                                               int timeStamp);
+    void clearVampFeatures();
     int nextVampFeatureTimeStamp;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SAFEFeatureExtractor);
 };
 
 #endif // SAFE_FEATURE_EXTRACTOR_H_INCLUDED
+    void clearVampFeatures();
