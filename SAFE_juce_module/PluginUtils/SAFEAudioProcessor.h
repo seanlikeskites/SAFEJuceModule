@@ -350,6 +350,16 @@ protected:
      *  @param feature  the feature to extract
      */
     void addLibXtractFeature (LibXtract::Feature feature);
+
+    /** Add vamp plug-in to extract features from the audio.
+     * 
+     *  @param libraryName  the name of the vamp plug-in library
+     *  @param pluginName   the name of the plug-in in the library
+     *
+     *  The vamp plug-ins added should be installed in the standard vamp
+     *  plug-in directory on the users system. If they are not on the system the features
+     *  will not be extracted.
+     */
     void addVampPlugin (const String &libraryName, const String &pluginName);
 
     //==========================================================================
@@ -367,7 +377,7 @@ protected:
     //==========================================================================
     //      Multiple Channel Stuff
     //==========================================================================
-    double fs;
+    double fs; /**< The sample rate the plug-in is running at. */
     int numInputs; /**< The number of audio inputs. */
     int numOutputs; /**< The number of audio outputs. */
 
@@ -380,6 +390,10 @@ protected:
     //==========================================================================
     //      Generate a details XML
     //==========================================================================
+    /** Save the plug-ins details to an xml file
+     *  
+     *  This file is used when registering a plug-in on the SAFE server.
+     */
     void saveDetailsToXml();
 
 private:

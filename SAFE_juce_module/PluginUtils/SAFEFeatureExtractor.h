@@ -76,14 +76,32 @@ public:
     //==========================================================================
     /** Analyse a buffer of audio.
      *
-     *  @param buffer  the buffer of audio to analyse.
-     *
      *  This function steps through the buffer of audio at the various
      *  frame and step sizes that are enabled. The features values are saved locally
      *  to the feature extractor object for reference later.
+     *
+     *  @param buffer  the buffer of audio to analyse.
      */
     void analyseAudio (AudioSampleBuffer &buffer);
+
+    /** Set a windowing function for use in the spectral analysis.
+     *
+     *  During spectral analysis each frame of audio is passed to the windowing 
+     *  function to have a window applied. By default the spectral analysis uses
+     *  a Hann window.
+     *
+     *  @param newWindowingFunction  a pointer to the new windowing function to use -
+     *                               the function should apply a window function of length
+     *                               numSamples to the audioData
+     */
     void setWindowingFunction (void (*newWindowingFunction) (float*, int));
+
+    /** Add the recorded audio features to an xml element.
+     *
+     *  This should be called after a call to analyseAudio() has returned.
+     *  It will put all the audio features which were recorded into an xml element
+     *  you pass it.
+     */
     void addFeaturesToXmlElement (XmlElement *element);
 
 private:

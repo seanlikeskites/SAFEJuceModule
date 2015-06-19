@@ -105,8 +105,8 @@ protected:
      */
     void setExtraScreenPosition (int x, int y);
 
-    int extraScreenWidth;
-    int extraScreenHeight;
+    int extraScreenWidth; /**< The width of the extra screens. */
+    int extraScreenHeight; /**< The height of the extra screens. */
 
 private:
     enum Timers
