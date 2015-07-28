@@ -397,6 +397,8 @@ WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, co
     rdfFile = fopen (tempRdfFile.getFullPathName().toRawUTF8(), "w");
     librdf_serializer_serialize_model_to_file_handle (rdf.serializer, rdfFile, NULL, rdf.model);
     fclose (rdfFile);
+
+    return NoWarning;
 }
 
 WarningID SAFEAudioProcessor::loadSemanticData (const String& descriptor)

@@ -364,7 +364,7 @@ void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf)
                                                     librdf_new_node_from_uri_string (rdf.world, 
                                                                                      (const unsigned char*) 
                                                                                          "http://purl.org/dc/elements/1.1/title"),
-                                                    librdf_new_node_from_literal (rdf.world, (const unsigned char*) "Shiz", NULL, 0));
+                                                    librdf_new_node_from_literal (rdf.world, (const unsigned char*) "Test", NULL, 0));
     librdf_model_add_statement (rdf.model, rdfStatement);
     librdf_free_statement (rdfStatement);
 }
