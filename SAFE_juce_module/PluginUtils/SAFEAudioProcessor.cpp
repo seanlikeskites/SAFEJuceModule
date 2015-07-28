@@ -390,9 +390,12 @@ WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, co
     File dataDirectory (documentsDirectory.getChildFile ("SAFEPluginData"));
     File tempRdfFile = dataDirectory.getChildFile (JucePlugin_Name + String ("Temp.ttl"));
 
+    LibrdfHolder rdf;
+    unprocessedFeatureExtractor.addFeaturesToRdf (rdf);
+
     FILE *rdfFile;
     rdfFile = fopen (tempRdfFile.getFullPathName().toRawUTF8(), "w");
-    unprocessedFeatureExtractor.addFeaturesToRDF (rdfFile);
+    librdf_serializer_serialize_model_to_file_handle (rdf.serializer, rdfFile, NULL, rdf.model);
     fclose (rdfFile);
 }
 

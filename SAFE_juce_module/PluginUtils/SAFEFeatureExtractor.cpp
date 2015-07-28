@@ -355,19 +355,18 @@ void SAFEFeatureExtractor::addFeaturesToXmlElement (XmlElement *element)
     }
 }
 
-void SAFEFeatureExtractor::addFeaturesToRDF (FILE *rdfFile)
+void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf)
 {
-    LibrdfHolder rdf;
-
     librdf_statement *rdfStatement;
     rdfStatement = librdf_new_statement_from_nodes (rdf.world,
-                                                    librdf_new_node_from_uri_string (rdf.world, (const unsigned char*) "http://example.org"),
-                                                    librdf_new_node_from_uri_string (rdf.world, (const unsigned char*) "http://purl.org/dc/elements/1.1/title"),
-                                                    librdf_new_node_from_literal (rdf.world, (const unsigned char*) "Cake", NULL, 0));
+                                                    librdf_new_node_from_uri_string (rdf.world, 
+                                                                                     (const unsigned char*) "http://example.org"),
+                                                    librdf_new_node_from_uri_string (rdf.world, 
+                                                                                     (const unsigned char*) 
+                                                                                         "http://purl.org/dc/elements/1.1/title"),
+                                                    librdf_new_node_from_literal (rdf.world, (const unsigned char*) "Shiz", NULL, 0));
     librdf_model_add_statement (rdf.model, rdfStatement);
     librdf_free_statement (rdfStatement);
-
-    librdf_serializer_serialize_model_to_file_handle (rdf.serializer, rdfFile, NULL, rdf.model);
 }
 
 void SAFEFeatureExtractor::cacheNewFFT (int size)

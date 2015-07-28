@@ -104,13 +104,13 @@ public:
      */
     void addFeaturesToXmlElement (XmlElement *element);
 
-    /** Add the recorded audio features to a RDF file
+    /** Add the recorded audio features to a LibrdfHolder object's model.
      *
      *  This should be called after a call to analyseAudio() has returned.
-     *  It will put all the audio features which were recorded into a rdf file
-     *  you pass it using the turtle syntax.
+     *  It will put all the audio features which were recorded into the model
+     *  of a LibrdfHolder object you pass it.
      */
-    void addFeaturesToRDF (FILE *rdfFile);
+    void addFeaturesToRdf (LibrdfHolder &rdf);
 
 private:
     bool initialised;
