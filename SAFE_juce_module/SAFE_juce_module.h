@@ -11,6 +11,9 @@
 #include <complex>
 #include <map>
 
+#include <stdlib.h>
+#include <redland.h>
+
 #if JUCE_LINUX
     #include <curl/curl.h>
 #endif
@@ -43,6 +46,7 @@ namespace juce
     #include "PluginUtils/CurlHolder.h"
 #endif
 
+#include "PluginUtils/LibrdfHolder.h"
 #include "PluginUtils/LibXtractFeatures.h"
 #include "PluginUtils/SAFEFeatureExtractor.h"
 #include "PluginUtils/SAFEParameter.h"

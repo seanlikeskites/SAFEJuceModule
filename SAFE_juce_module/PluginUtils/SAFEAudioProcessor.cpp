@@ -357,7 +357,7 @@ WarningID SAFEAudioProcessor::populateXmlElementWithSemanticData (XmlElement* el
 
 WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, const SAFEMetaData& metaData)
 {
-    // separate different descriptors
+    /* // separate different descriptors
     StringArray descriptors;
     descriptors.addTokens (newDescriptors, " ,;", String::empty);
     int numDescriptors = descriptors.size();
@@ -384,7 +384,16 @@ WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, co
     // save to file
     semanticDataElement->writeToFile (semanticDataFile, "");
 
-    return warning;
+    return warning; */
+
+    File documentsDirectory (File::getSpecialLocation (File::userDocumentsDirectory));
+    File dataDirectory (documentsDirectory.getChildFile ("SAFEPluginData"));
+    File tempRdfFile = dataDirectory.getChildFile (JucePlugin_Name + String ("Temp.ttl"));
+
+    FILE *rdfFile;
+    rdfFile = fopen (tempRdfFile.getFullPathName().toRawUTF8(), "w");
+    unprocessedFeatureExtractor.addFeaturesToRDF (rdfFile);
+    fclose (rdfFile);
 }
 
 WarningID SAFEAudioProcessor::loadSemanticData (const String& descriptor)

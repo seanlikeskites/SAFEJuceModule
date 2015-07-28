@@ -104,6 +104,14 @@ public:
      */
     void addFeaturesToXmlElement (XmlElement *element);
 
+    /** Add the recorded audio features to a RDF file
+     *
+     *  This should be called after a call to analyseAudio() has returned.
+     *  It will put all the audio features which were recorded into a rdf file
+     *  you pass it using the turtle syntax.
+     */
+    void addFeaturesToRDF (FILE *rdfFile);
+
 private:
     bool initialised;
     int numChannels, defaultFrameSize, defaultStepSize;
@@ -206,4 +214,3 @@ private:
 };
 
 #endif // SAFE_FEATURE_EXTRACTOR_H_INCLUDED
-    void clearVampFeatures();
