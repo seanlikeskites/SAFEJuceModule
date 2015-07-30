@@ -35,6 +35,15 @@ LibrdfHolder::LibrdfHolder()
       afxParameterId (librdf_new_node_from_uri_local_name (world.get(), afx.get(), 
                                                            (const unsigned char*) "parameter_id"), librdf_free_node)
 {
+    // set up namespaces
+    librdf_serializer_set_namespace (serializer.get(), mo.get(), "mo");
+    librdf_serializer_set_namespace (serializer.get(), af.get(), "af");
+    librdf_serializer_set_namespace (serializer.get(), rdfs.get(), "rdfs");
+    librdf_serializer_set_namespace (serializer.get(), prov.get(), "prov");
+    librdf_serializer_set_namespace (serializer.get(), qudt.get(), "qudt");
+    librdf_serializer_set_namespace (serializer.get(), afx.get(), "afx");
+    librdf_serializer_set_namespace (serializer.get(), afxdb.get(), "afxdb");
+    librdf_serializer_set_namespace (serializer.get(), xsd.get(), "xsd");
 }
 
 LibrdfHolder::~LibrdfHolder()

@@ -642,8 +642,12 @@ void SAFEAudioProcessor::saveDetailsToRdf()
     // some handy rdf stuff
     LibrdfHolder rdf;
 
+    // get the plug-ins format and version
+    String pluginFormat (getPluginFormat());
+    String versionNumber (JucePlugin_VersionString);
+
     // create a node for the plug-in
-    String implementationName = "implementation_" + getPluginCode();
+    String implementationName = "implementation_" + getPluginCode() + "_" + pluginFormat + "_" + versionNumber;
     LibrdfHolder::NodePointer pluginNode (librdf_new_node_from_uri_local_name (rdf.world.get(),
                                                                                rdf.afxdb.get(),
                                                                                (const unsigned char*) implementationName.toRawUTF8()),
@@ -1098,6 +1102,30 @@ void SAFEAudioProcessor::resetRecording()
 {
     recording = false;
     stopTimer();
+}
+
+//==========================================================================
+//      Get plug-in type
+//==========================================================================
+String SAFEAudioProcessor::getPluginFormat()
+{
+    switch (wrapperType)
+    {
+        case wrapperType_Undefined:
+            return "Undefined";
+        case wrapperType_VST:
+            return "VST";
+        case wrapperType_VST3:
+            return "VST3";
+        case wrapperType_AudioUnit:
+            return "AU";
+        case wrapperType_RTAS:
+            return "RTAS";
+        case wrapperType_AAX:
+            return "AAX";
+        case wrapperType_Standalone:
+            return "Standalone";
+    }
 }
 
 //==========================================================================
