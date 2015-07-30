@@ -9,10 +9,12 @@
 #include "xtract/libxtract.h"
 
 #include <complex>
+#include <memory>
 #include <map>
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <redland.h>
+#include <rdf_concepts.h>
 
 #if JUCE_LINUX
     #include <curl/curl.h>
