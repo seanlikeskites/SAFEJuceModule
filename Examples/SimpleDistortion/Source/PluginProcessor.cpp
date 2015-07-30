@@ -46,9 +46,9 @@ SimpleDistortionAudioProcessor::SimpleDistortionAudioProcessor()
     // xml files.
     //
     // This must be called after the parameters have been added!
-#ifdef JUCE_DEBUG
-    saveDetailsToXml();
-#endif
+//#ifdef JUCE_DEBUG
+    saveDetailsToRdf();
+//#endif
 }
 
 SimpleDistortionAudioProcessor::~SimpleDistortionAudioProcessor()
