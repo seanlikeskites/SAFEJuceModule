@@ -386,7 +386,7 @@ WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, co
 
     return warning; */
 
-    File documentsDirectory (File::getSpecialLocation (File::userDocumentsDirectory));
+    /*File documentsDirectory (File::getSpecialLocation (File::userDocumentsDirectory));
     File dataDirectory (documentsDirectory.getChildFile ("SAFEPluginData"));
     File tempRdfFile = dataDirectory.getChildFile (JucePlugin_Name + String ("Temp.ttl"));
 
@@ -396,7 +396,7 @@ WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, co
     FILE *rdfFile;
     rdfFile = fopen (tempRdfFile.getFullPathName().toRawUTF8(), "w");
     librdf_serializer_serialize_model_to_file_handle (rdf.serializer, rdfFile, NULL, rdf.model);
-    fclose (rdfFile);
+    fclose (rdfFile);*/
 
     return NoWarning;
 }
@@ -628,6 +628,97 @@ void SAFEAudioProcessor::saveDetailsToXml()
     File tempDataFile = dataDirectory.getChildFile (JucePlugin_Name + String ("Details.xml"));
 
     parentElement.writeToFile (tempDataFile, "");
+}
+
+//==========================================================================
+//      Generate a details RDF
+//==========================================================================
+void SAFEAudioProcessor::saveDetailsToRdf()
+{
+    File documentsDirectory (File::getSpecialLocation (File::userDocumentsDirectory));
+    File dataDirectory (documentsDirectory.getChildFile ("SAFEPluginData"));
+    File tempDataFile = dataDirectory.getChildFile (JucePlugin_Name + String ("Details.ttl"));
+
+    // some handy rdf stuff
+    LibrdfHolder rdf;
+
+    // create a node for the plug-in
+    String implementationName = "implementation_" + getPluginCode();
+    LibrdfHolder::NodePointer pluginNode (librdf_new_node_from_uri_local_name (rdf.world.get(),
+                                                                               rdf.afxdb.get(),
+                                                                               (const unsigned char*) implementationName.toRawUTF8()),
+                                          librdf_free_node);
+
+    // plug-in is an audio effect implementation
+    rdf.addTriple (pluginNode, rdf.rdfType, rdf.afxImplementation);
+
+    // plug-in is a software agent
+    rdf.addTriple (pluginNode, rdf.rdfType, rdf.provSoftwareAgent);
+
+    // plug-ins parameters
+    for (int i = 0; i < parameters.size(); ++i)
+    {
+        // create a blank node for the parameter
+        String parameterNodeName = "param" + String (i);
+        LibrdfHolder::NodePointer parameterNode (librdf_new_node_from_blank_identifier (rdf.world.get(),
+                                                                   (const unsigned char*) parameterNodeName.toRawUTF8()),
+                                                 librdf_free_node);
+
+        // parameter belongs to plug-in
+        rdf.addTriple (pluginNode, rdf.afxHasParameter, parameterNode);
+
+        // parameter is a parameter
+        rdf.addTriple (parameterNode, rdf.rdfType, rdf.afxNumParameter);
+
+        // parameter name
+        String parameterName = parameters [i]->getName();
+        LibrdfHolder::NodePointer parameterNameNode (librdf_new_node_from_typed_literal (rdf.world.get(),
+                                                                                (const unsigned char*) parameterName.toRawUTF8(),
+                                                                                NULL,
+                                                                                rdf.xsdString.get()),
+                                                     librdf_free_node);
+        rdf.addTriple (parameterNode, rdf.rdfsLabel, parameterNameNode);
+
+        // parameter id
+        LibrdfHolder::NodePointer parameterIdNode (librdf_new_node_from_typed_literal (rdf.world.get(),
+                                                            (const unsigned char*) String (i).toRawUTF8(),
+                                                             NULL,
+                                                             rdf.xsdInteger.get()),
+                                                   librdf_free_node);
+        rdf.addTriple (parameterNode, rdf.afxParameterId, parameterIdNode);
+
+        // default value
+        String defaultValueName = parameterNodeName + "default";
+        LibrdfHolder::NodePointer defaultValueNode (librdf_new_node_from_blank_identifier (rdf.world.get(),
+                                                                      (const unsigned char*) defaultValueName.toRawUTF8()),
+                                                    librdf_free_node);
+        rdf.addTriple (parameterNode, rdf.afxDefaultValue, defaultValueNode);
+        rdf.addTriple (defaultValueNode, rdf.rdfType, rdf.qudtQuantityValue);
+        rdf.addTriple (defaultValueNode, rdf.qudtNumericValue, String (parameters [i]->getDefaultValue()));
+
+        // minimum value
+        String minValueName = parameterNodeName + "min";
+        LibrdfHolder::NodePointer minValueNode (librdf_new_node_from_blank_identifier (rdf.world.get(),
+                                                                  (const unsigned char*) minValueName.toRawUTF8()),
+                                                    librdf_free_node);
+        rdf.addTriple (parameterNode, rdf.afxDefaultValue, minValueNode);
+        rdf.addTriple (minValueNode, rdf.rdfType, rdf.qudtQuantityValue);
+        rdf.addTriple (minValueNode, rdf.qudtNumericValue, String (parameters [i]->getMinValue()));
+        
+        // maximum value
+        String maxValueName = parameterNodeName + "max";
+        LibrdfHolder::NodePointer maxValueNode (librdf_new_node_from_blank_identifier (rdf.world.get(),
+                                                                  (const unsigned char*) maxValueName.toRawUTF8()),
+                                                    librdf_free_node);
+        rdf.addTriple (parameterNode, rdf.afxDefaultValue, maxValueNode);
+        rdf.addTriple (maxValueNode, rdf.rdfType, rdf.qudtQuantityValue);
+        rdf.addTriple (maxValueNode, rdf.qudtNumericValue, String (parameters [i]->getMaxValue()));
+    }
+
+    FILE *rdfFile;
+    rdfFile = fopen (tempDataFile.getFullPathName().toRawUTF8(), "w");
+    librdf_serializer_serialize_model_to_file_handle (rdf.serializer.get(), rdfFile, NULL, rdf.model.get());
+    fclose (rdfFile);
 }
 
 //==========================================================================

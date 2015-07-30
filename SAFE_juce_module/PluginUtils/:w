@@ -13,7 +13,6 @@ LibrdfHolder::LibrdfHolder()
       afxdb (librdf_new_uri (world.get(), (const unsigned char*) "http://stuff.stuff/stuff/"), librdf_free_uri),
       xsd (librdf_new_uri (world.get(), (const unsigned char*) "http://www.w3.org/2001/XMLSchema#"), librdf_free_uri),
       xsdString (librdf_new_uri_from_uri_local_name (xsd.get(), (const unsigned char*) "string"), librdf_free_uri),
-      xsdInteger (librdf_new_uri_from_uri_local_name (xsd.get(), (const unsigned char*) "integer"), librdf_free_uri),
       // Nodes
       rdfType (librdf_new_node_from_node (LIBRDF_MS_type (world.get())), librdf_free_node),
       afxImplementation (librdf_new_node_from_uri_local_name (world.get(), afx.get(), 
@@ -25,15 +24,7 @@ LibrdfHolder::LibrdfHolder()
       afxNumParameter (librdf_new_node_from_uri_local_name (world.get(), afx.get(), 
                                                             (const unsigned char*) "NumParameter"), librdf_free_node),
       rdfsLabel (librdf_new_node_from_uri_local_name (world.get(), rdfs.get(), 
-                                                      (const unsigned char*) "label"), librdf_free_node),
-      afxDefaultValue (librdf_new_node_from_uri_local_name (world.get(), afx.get(), 
-                                                            (const unsigned char*) "default_value"), librdf_free_node),
-      qudtQuantityValue (librdf_new_node_from_uri_local_name (world.get(), qudt.get(), 
-                                                              (const unsigned char*) "QuantityValue"), librdf_free_node),
-      qudtNumericValue (librdf_new_node_from_uri_local_name (world.get(), qudt.get(), 
-                                                             (const unsigned char*) "numericValue"), librdf_free_node),
-      afxParameterId (librdf_new_node_from_uri_local_name (world.get(), afx.get(), 
-                                                           (const unsigned char*) "parameter_id"), librdf_free_node)
+                                                      (const unsigned char*) "label"), librdf_free_node)
 {
 }
 
@@ -52,14 +43,6 @@ void LibrdfHolder::addTriple (NodePointer &subject, NodePointer &predicate, Node
                                                                  librdf_new_node_from_node (object.get())),
                                 librdf_free_statement);
     librdf_model_add_statement (model.get(), statement.get());
-}
-
-void LibrdfHolder::addTriple (NodePointer &subject, NodePointer &predicate, const String &literalObject)
-{
-    NodePointer objectNode (librdf_new_node_from_literal (world.get(), (const unsigned char*) literalObject.toRawUTF8(),
-                                                          NULL, 0),
-                            librdf_free_node);
-    addTriple (subject, predicate, objectNode);
 }
 
 librdf_world* LibrdfHolder::createAndOpenWorld()

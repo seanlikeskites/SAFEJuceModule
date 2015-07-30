@@ -357,7 +357,7 @@ void SAFEFeatureExtractor::addFeaturesToXmlElement (XmlElement *element)
 
 void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf)
 {
-    librdf_statement *rdfStatement;
+    /*librdf_statement *rdfStatement;
 
     rdfStatement = librdf_new_statement_from_nodes (rdf.world,
                                                     librdf_new_node_from_uri_string (rdf.world, 
@@ -388,7 +388,7 @@ void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf)
                                                                                          "http://purl.org/dc/elements/1.1/jam"),
                                                     librdf_new_node_from_literal (rdf.world, (const unsigned char*) "Rhubarb", NULL, 0));
     librdf_model_add_statement (rdf.model, rdfStatement);
-    librdf_free_statement (rdfStatement);
+    librdf_free_statement (rdfStatement);*/
 }
 
 void SAFEFeatureExtractor::cacheNewFFT (int size)

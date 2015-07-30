@@ -4,8 +4,9 @@
 /** 
  *  A class for holding onto some useful librdf things.
  */
-struct LibrdfHolder
+class LibrdfHolder
 {
+public:
     //==========================================================================
     //      Constructor and Destructor
     //==========================================================================
@@ -15,10 +16,58 @@ struct LibrdfHolder
     /** Destructor */
     ~LibrdfHolder();
 
-    librdf_world *world; /**< An instance of a librdf world object. */
-    librdf_storage *storage; /**< An instance of an in memory librdf storage object. */
-    librdf_model *model; /**< An instance of a librdf model object. */
-    librdf_serializer *serializer; /**< A librdf serializer for the turtle syntax. */
+    //==========================================================================
+    //      Useful typedefs
+    //==========================================================================
+    typedef std::unique_ptr <librdf_node, void (*)(librdf_node*)> NodePointer;
+    typedef std::unique_ptr <librdf_uri, void (*)(librdf_uri*)> UriPointer;
+    typedef std::unique_ptr <librdf_statement, void (*)(librdf_statement*)> StatementPointer;
+
+    //==========================================================================
+    //      librdf objects
+    //==========================================================================
+    std::unique_ptr <librdf_world, void (*)(librdf_world*)> world; /**< An instance of a librdf world object. */
+    std::unique_ptr <librdf_storage, void (*)(librdf_storage*)> storage; /**< An instance of an in memory librdf storage object. */
+    std::unique_ptr <librdf_model, void (*)(librdf_model*)> model; /**< An instance of a librdf model object. */
+    std::unique_ptr <librdf_serializer, void (*)(librdf_serializer*)> serializer; /**< A librdf serializer for the turtle syntax. */
+
+    //==========================================================================
+    //      Ontology URIs
+    //==========================================================================
+    UriPointer mo; /**< The music ontology uri. */
+    UriPointer af; /**< The audio feature ontology uri. */
+    UriPointer rdfs; /**< The rdf schema ontology uri. */
+    UriPointer prov; /**< The provenance ontology uri. */
+    UriPointer qudt; /**< The quantity, unit, dimension and time ontology uri. */
+    UriPointer afx; /**< The audio effects ontology uri. */
+    UriPointer afxdb; /**< The audio effect database uri. */
+    UriPointer xsd; /**< The XML schema ontology uri. */
+    UriPointer xsdString; /**< The XML schema string uri. */
+    UriPointer xsdInteger; /**< The XML schema integer uri. */
+
+    //==========================================================================
+    //      Useful Nodes
+    //==========================================================================
+    NodePointer rdfType;
+    NodePointer afxImplementation;
+    NodePointer provSoftwareAgent;
+    NodePointer afxHasParameter;
+    NodePointer afxNumParameter;
+    NodePointer rdfsLabel;
+    NodePointer afxDefaultValue;
+    NodePointer qudtQuantityValue;
+    NodePointer qudtNumericValue;
+    NodePointer afxParameterId;
+
+    //==========================================================================
+    //      Add triples
+    //==========================================================================
+    void addTriple (NodePointer &subject, NodePointer &predicate, NodePointer &object);
+    void addTriple (NodePointer &subject, NodePointer &predicate, const String &literalObject);
+
+private:
+    static librdf_world* createAndOpenWorld();
+
 };
 
 #endif // LIB_RDF_HOLDER_H_INCLUDED

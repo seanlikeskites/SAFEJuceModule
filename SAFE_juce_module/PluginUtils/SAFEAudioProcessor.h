@@ -396,6 +396,15 @@ protected:
      */
     void saveDetailsToXml();
 
+    //==========================================================================
+    //      Generate a details RDF file
+    //==========================================================================
+    /** Save the plug-ins details to an RDF file
+     *  
+     *  This file is used when registering a plug-in on the SAFE server.
+     */
+    void saveDetailsToRdf();
+
 private:
     bool localRecording;
 
