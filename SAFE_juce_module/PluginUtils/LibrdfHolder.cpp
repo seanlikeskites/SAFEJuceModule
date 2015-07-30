@@ -12,6 +12,9 @@ LibrdfHolder::LibrdfHolder()
       afx (librdf_new_uri (world.get(), (const unsigned char*) "http://something.something/something/"), librdf_free_uri),
       afxdb (librdf_new_uri (world.get(), (const unsigned char*) "http://stuff.stuff/stuff/"), librdf_free_uri),
       xsd (librdf_new_uri (world.get(), (const unsigned char*) "http://www.w3.org/2001/XMLSchema#"), librdf_free_uri),
+      safe (librdf_new_uri (world.get(), (const unsigned char*) "http://safe.safe/safe/"), librdf_free_uri),
+      safedb (librdf_new_uri (world.get(), (const unsigned char*) "http://safe.safe/safedb/"), librdf_free_uri),
+      studio (librdf_new_uri (world.get(), (const unsigned char*) "http://yuk.yuk/yuk/"), librdf_free_uri),
       xsdString (librdf_new_uri_from_uri_local_name (xsd.get(), (const unsigned char*) "string"), librdf_free_uri),
       xsdInteger (librdf_new_uri_from_uri_local_name (xsd.get(), (const unsigned char*) "integer"), librdf_free_uri),
       // Nodes
@@ -33,7 +36,25 @@ LibrdfHolder::LibrdfHolder()
       qudtNumericValue (librdf_new_node_from_uri_local_name (world.get(), qudt.get(), 
                                                              (const unsigned char*) "numericValue"), librdf_free_node),
       afxParameterId (librdf_new_node_from_uri_local_name (world.get(), afx.get(), 
-                                                           (const unsigned char*) "parameter_id"), librdf_free_node)
+                                                           (const unsigned char*) "parameter_id"), librdf_free_node),
+      provActivity (librdf_new_node_from_uri_local_name (world.get(), prov.get(), 
+                                                         (const unsigned char*) "Activity"), librdf_free_node),
+      studioTransform (librdf_new_node_from_uri_local_name (world.get(), studio.get(), 
+                                                            (const unsigned char*) "Transform"), librdf_free_node),
+      safeMetadata (librdf_new_node_from_uri_local_name (world.get(), safe.get(), 
+                                                         (const unsigned char*) "Metadata"), librdf_free_node),
+      safeMetadataItem (librdf_new_node_from_uri_local_name (world.get(), safe.get(), 
+                                                             (const unsigned char*) "MetadataItem"), librdf_free_node),
+      safeDescriptor (librdf_new_node_from_uri_local_name (world.get(), safe.get(), 
+                                                           (const unsigned char*) "Descriptor"), librdf_free_node),
+      safeDescriptorItem (librdf_new_node_from_uri_local_name (world.get(), safe.get(), 
+                                                             (const unsigned char*) "DescriptorItem"), librdf_free_node),
+      rdfsComment (librdf_new_node_from_uri_local_name (world.get(), rdfs.get(), 
+                                                        (const unsigned char*) "comment"), librdf_free_node),
+      provWasGeneratedBy (librdf_new_node_from_uri_local_name (world.get(), prov.get(), 
+                                                               (const unsigned char*) "wasGeneratedBy"), librdf_free_node),
+      provWasAssociatedWith (librdf_new_node_from_uri_local_name (world.get(), prov.get(), 
+                                                                  (const unsigned char*) "wasAssociatedWith"), librdf_free_node)
 {
     // set up namespaces
     librdf_serializer_set_namespace (serializer.get(), mo.get(), "mo");
@@ -44,6 +65,9 @@ LibrdfHolder::LibrdfHolder()
     librdf_serializer_set_namespace (serializer.get(), afx.get(), "afx");
     librdf_serializer_set_namespace (serializer.get(), afxdb.get(), "afxdb");
     librdf_serializer_set_namespace (serializer.get(), xsd.get(), "xsd");
+    librdf_serializer_set_namespace (serializer.get(), safe.get(), "safe");
+    librdf_serializer_set_namespace (serializer.get(), safedb.get(), "safedb");
+    librdf_serializer_set_namespace (serializer.get(), studio.get(), "studio");
 }
 
 LibrdfHolder::~LibrdfHolder()

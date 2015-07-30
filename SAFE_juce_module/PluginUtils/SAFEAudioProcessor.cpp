@@ -386,17 +386,40 @@ WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, co
 
     return warning; */
 
-    /*File documentsDirectory (File::getSpecialLocation (File::userDocumentsDirectory));
+    LibrdfHolder rdf;
+
+    // create a node for the transform
+    LibrdfHolder::NodePointer transformNode (librdf_new_node_from_uri_local_name (rdf.world.get(),
+                                                                                  rdf.safedb.get(),
+                                                                                  (const unsigned char*) "transform"),
+                                             librdf_free_node);
+
+    // transform is a transform and an activity
+    rdf.addTriple (transformNode, rdf.rdfType, rdf.provActivity);
+    rdf.addTriple (transformNode, rdf.rdfType, rdf.studioTransform);
+
+    // location metadata
+    LibrdfHolder::NodePointer locationNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+    rdf.addTriple (transformNode, rdf.safeMetadata, locationNode);
+    rdf.addTriple (locationNode, rdf.rdfType, rdf.safeMetadataItem);
+    rdf.addTriple (locationNode, rdf.rdfsLabel, "location");
+    rdf.addTriple (locationNode, rdf.rdfsComment, metaData.location);
+
+    // descriptors
+    LibrdfHolder::NodePointer descriptorNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+    rdf.addTriple (transformNode, rdf.safeDescriptor, descriptorNode);
+    rdf.addTriple (descriptorNode, rdf.rdfType, rdf.safeDescriptorItem);
+    rdf.addTriple (descriptorNode, rdf.rdfsComment, newDescriptors);
+
+    // save it to a file
+    File documentsDirectory (File::getSpecialLocation (File::userDocumentsDirectory));
     File dataDirectory (documentsDirectory.getChildFile ("SAFEPluginData"));
     File tempRdfFile = dataDirectory.getChildFile (JucePlugin_Name + String ("Temp.ttl"));
 
-    LibrdfHolder rdf;
-    unprocessedFeatureExtractor.addFeaturesToRdf (rdf);
-
     FILE *rdfFile;
     rdfFile = fopen (tempRdfFile.getFullPathName().toRawUTF8(), "w");
-    librdf_serializer_serialize_model_to_file_handle (rdf.serializer, rdfFile, NULL, rdf.model);
-    fclose (rdfFile);*/
+    librdf_serializer_serialize_model_to_file_handle (rdf.serializer.get(), rdfFile, NULL, rdf.model.get());
+    fclose (rdfFile);
 
     return NoWarning;
 }

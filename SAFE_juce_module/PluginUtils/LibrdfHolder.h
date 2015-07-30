@@ -42,6 +42,10 @@ public:
     UriPointer afx; /**< The audio effects ontology uri. */
     UriPointer afxdb; /**< The audio effect database uri. */
     UriPointer xsd; /**< The XML schema ontology uri. */
+    UriPointer safe; /**< The safe ontology uri. */
+    UriPointer safedb; /**< The safe database uri. */
+    UriPointer studio; /**< The studio ontology uri. */
+
     UriPointer xsdString; /**< The XML schema string uri. */
     UriPointer xsdInteger; /**< The XML schema integer uri. */
 
@@ -58,6 +62,15 @@ public:
     NodePointer qudtQuantityValue;
     NodePointer qudtNumericValue;
     NodePointer afxParameterId;
+    NodePointer provActivity;
+    NodePointer studioTransform;
+    NodePointer safeMetadata;
+    NodePointer safeMetadataItem;
+    NodePointer safeDescriptor;
+    NodePointer safeDescriptorItem;
+    NodePointer rdfsComment;
+    NodePointer provWasGeneratedBy;
+    NodePointer provWasAssociatedWith;
 
     //==========================================================================
     //      Add triples
