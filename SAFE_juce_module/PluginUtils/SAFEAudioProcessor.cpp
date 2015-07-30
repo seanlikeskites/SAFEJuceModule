@@ -728,7 +728,7 @@ void SAFEAudioProcessor::saveDetailsToRdf()
         LibrdfHolder::NodePointer minValueNode (librdf_new_node_from_blank_identifier (rdf.world.get(),
                                                                   (const unsigned char*) minValueName.toRawUTF8()),
                                                     librdf_free_node);
-        rdf.addTriple (parameterNode, rdf.afxDefaultValue, minValueNode);
+        rdf.addTriple (parameterNode, rdf.afxMinValue, minValueNode);
         rdf.addTriple (minValueNode, rdf.rdfType, rdf.qudtQuantityValue);
         rdf.addTriple (minValueNode, rdf.qudtNumericValue, String (parameters [i]->getMinValue()));
         
@@ -737,7 +737,7 @@ void SAFEAudioProcessor::saveDetailsToRdf()
         LibrdfHolder::NodePointer maxValueNode (librdf_new_node_from_blank_identifier (rdf.world.get(),
                                                                   (const unsigned char*) maxValueName.toRawUTF8()),
                                                     librdf_free_node);
-        rdf.addTriple (parameterNode, rdf.afxDefaultValue, maxValueNode);
+        rdf.addTriple (parameterNode, rdf.afxMaxValue, maxValueNode);
         rdf.addTriple (maxValueNode, rdf.rdfType, rdf.qudtQuantityValue);
         rdf.addTriple (maxValueNode, rdf.qudtNumericValue, String (parameters [i]->getMaxValue()));
     }

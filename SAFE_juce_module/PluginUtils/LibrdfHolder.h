@@ -59,6 +59,8 @@ public:
     NodePointer afxNumParameter;
     NodePointer rdfsLabel;
     NodePointer afxDefaultValue;
+    NodePointer afxMinValue;
+    NodePointer afxMaxValue;
     NodePointer qudtQuantityValue;
     NodePointer qudtNumericValue;
     NodePointer afxParameterId;
