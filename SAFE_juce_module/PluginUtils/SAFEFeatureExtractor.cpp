@@ -374,7 +374,7 @@ void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf, OwnedArray <Libr
                                                       librdf_free_node);
             rdf.addTriple (extractionNode, rdf.rdfType, rdf.provActivity);
             rdf.addTriple (extractionNode, rdf.rdfType, rdf.safeFeatureExtractionTransform);
-            rdf.addTriple (extractionNode, rdf.provWasAssociatedWith, rdf.safeLibxtract);
+            rdf.addTriple (extractionNode, rdf.provWasAssociatedWith, rdf.safedbLibxtract);
             rdf.addTriple (extractionNode, rdf.provUsed, *(signalNodes [channel]));
             rdf.addTriple (extractionNode, rdf.rdfsLabel, featureName);
             

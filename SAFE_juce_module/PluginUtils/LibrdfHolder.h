@@ -113,7 +113,9 @@ public:
     NodePointer safeDescriptor;
     NodePointer safeDescriptorItem;
     NodePointer safeFeatureExtractionTransform;
-    NodePointer safeLibxtract;
+
+    // safedb namespace
+    NodePointer safedbLibxtract;
 
     //==========================================================================
     //      Add triples

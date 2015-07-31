@@ -110,7 +110,8 @@ LibrdfHolder::LibrdfHolder()
                                                              (const unsigned char*) "DescriptorItem"), librdf_free_node),
       safeFeatureExtractionTransform (librdf_new_node_from_uri_local_name (world.get(), safe.get(), 
                                                          (const unsigned char*) "FeatureExtractionTransform"), librdf_free_node),
-      safeLibxtract (librdf_new_node_from_uri_local_name (world.get(), safe.get(), 
+      // safedb namespace
+      safedbLibxtract (librdf_new_node_from_uri_local_name (world.get(), safedb.get(), 
                                                           (const unsigned char*) "libxtract"), librdf_free_node)
 {
     // set up namespaces
