@@ -122,6 +122,8 @@ public:
     NodePointer safeDescriptor;
     NodePointer safeDescriptorItem;
     NodePointer safeFeatureExtractionTransform;
+    NodePointer safeFrameSize;
+    NodePointer safeStepSize;
     
     // safedb namespace
     NodePointer safedbLibxtract;

@@ -363,8 +363,8 @@ void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf, OwnedArray <Libr
     {
         LibXtractFeature *currentFeature = libXtractFeatureValues [i];
         String featureName = LibXtract::getFeatureName (currentFeature->featureNumber);
-        String frameSize = String (defaultFrameSize);
-        String stepSize = String (defaultStepSize);
+        String frameSize (defaultFrameSize);
+        String stepSize (defaultStepSize);
 
         for (int channel = 0; channel < numChannels; ++channel)
         {
@@ -377,6 +377,8 @@ void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf, OwnedArray <Libr
             rdf.addTriple (extractionNode, rdf.provWasAssociatedWith, rdf.safedbLibxtract);
             rdf.addTriple (extractionNode, rdf.provUsed, *(signalNodes [channel]));
             rdf.addTriple (extractionNode, rdf.rdfsLabel, featureName);
+            rdf.addTriple (extractionNode, rdf.safeFrameSize, frameSize);
+            rdf.addTriple (extractionNode, rdf.safeStepSize, stepSize);
             
             int numFeatures = currentFeature->featureValues.getReference (channel).size();
 
@@ -387,6 +389,46 @@ void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf, OwnedArray <Libr
                                       *(timelineNodes [channel]),
                                       extractionNode);
             }
+        }
+    }
+
+    // add vamp features
+    for (int i = 0; i < vampPlugins.size(); ++i)
+    {
+        VampPluginConfiguration *currentPlugin = vampPlugins [i];
+        int numFeatures = currentPlugin->featureValues.size();
+        String frameSize (currentPlugin->frameSize);
+        String stepSize (currentPlugin->stepSize);
+
+        for (int feature = 0; feature < numFeatures; ++feature)
+        {
+            String featureName = String ("Vamp ") + currentPlugin->outputs [feature].name;
+            String extractionString = "feature_extraction_" + String (extractionNumber++);
+            LibrdfHolder::NodePointer extractionNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
+                                                                         (const unsigned char*) extractionString.toRawUTF8()),
+                                                      librdf_free_node);
+            rdf.addTriple (extractionNode, rdf.rdfType, rdf.provActivity);
+            rdf.addTriple (extractionNode, rdf.rdfType, rdf.safeFeatureExtractionTransform);
+            rdf.addTriple (extractionNode, rdf.rdfsLabel, featureName);
+            rdf.addTriple (extractionNode, rdf.safeFrameSize, frameSize);
+            rdf.addTriple (extractionNode, rdf.safeStepSize, stepSize);
+
+            for (int channel = 0; channel < signalNodes.size(); ++channel)
+            {
+                rdf.addTriple (extractionNode, rdf.provUsed, *(signalNodes [channel]));
+            }
+
+            int numValues = currentPlugin->featureValues.getReference (feature).size();
+
+            for (int value = 0; value < numValues; ++value)
+            {
+                // this needs to be linked to a proper timeline
+                addAudioFeatureToRdf (rdf,
+                                      currentPlugin->featureValues.getReference (feature).getReference (value),
+                                      *(timelineNodes [0]),
+                                      extractionNode);
+            }
+
         }
     }
 }
