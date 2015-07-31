@@ -380,7 +380,7 @@ void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf, OwnedArray <Libr
             
             int numFeatures = currentFeature->featureValues.getReference (channel).size();
 
-            for (int feature = 0; features < numFeatures; ++feature)
+            for (int feature = 0; feature < numFeatures; ++feature)
             {
             }
         }
@@ -537,7 +537,8 @@ void SAFEFeatureExtractor::addAudioFeatureToXmlElement (XmlElement *element, con
 }
 
 void SAFEFeatureExtractor::addAudioFeatureToRdf (LibrdfHolder &rdf, const AudioFeature &feature,
-                                                 NodePointer &timelineNode, NodePointer &extractionNode)
+                                                 LibrdfHolder::NodePointer &timelineNode, 
+                                                 LibrdfHolder::NodePointer &extractionNode)
 {
 }
 

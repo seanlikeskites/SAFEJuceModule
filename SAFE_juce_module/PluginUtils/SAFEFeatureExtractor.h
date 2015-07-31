@@ -147,7 +147,8 @@ private:
 
     void addAudioFeatureToXmlElement (XmlElement *element, const AudioFeature &feature);
     void addAudioFeatureToRdf (LibrdfHolder &rdf, const AudioFeature &feature,
-                               NodePointer &timelineNode, NodePointer &extractionNode);
+                               LibrdfHolder::NodePointer &timelineNode, 
+                               LibrdfHolder::NodePointer &extractionNode);
     String doubleToString (double value);
     
     //==========================================================================
