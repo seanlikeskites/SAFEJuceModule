@@ -49,7 +49,7 @@
                externalLibraries="curl&#10;xml2&#10;xslt">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
-                       isDebug="0" optimisation="1" targetName="SimpleDistortion" headerPath="/usr/local/include&#10;/usr/local/include/raptor2&#10;/usr/local/include/rasqal"
+                       isDebug="1" optimisation="1" targetName="SimpleDistortion" headerPath="/usr/local/include&#10;/usr/local/include/raptor2&#10;/usr/local/include/rasqal"
                        libraryPath="/usr/local/lib"/>
         <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
                        isDebug="0" optimisation="2" targetName="SimpleDistortion"/>

@@ -357,6 +357,9 @@ WarningID SAFEAudioProcessor::populateXmlElementWithSemanticData (XmlElement* el
 
 WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, const SAFEMetaData& metaData)
 {
+    // run the analysis
+    WarningID warning = analyseRecordedSamples();
+
     // rdf object
     LibrdfHolder rdf;
     

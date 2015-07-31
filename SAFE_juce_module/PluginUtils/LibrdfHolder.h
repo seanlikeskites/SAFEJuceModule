@@ -63,6 +63,9 @@ public:
     // rdfs namespace
     NodePointer rdfsLabel;
     NodePointer rdfsComment;
+
+    // af namespace
+    NodePointer afFeature;
     
     // afx namespace
     NodePointer afxImplementation;
@@ -106,6 +109,12 @@ public:
     NodePointer tlInterval;
     NodePointer tlOnTimeline;
     NodePointer tlTimeline;
+    NodePointer tlInstant;
+    NodePointer tlAt;
+
+    // event namespace
+    NodePointer eventEvent;
+    NodePointer eventTime;
 
     // safe namespace
     NodePointer safeMetadata;
@@ -113,7 +122,7 @@ public:
     NodePointer safeDescriptor;
     NodePointer safeDescriptorItem;
     NodePointer safeFeatureExtractionTransform;
-
+    
     // safedb namespace
     NodePointer safedbLibxtract;
 

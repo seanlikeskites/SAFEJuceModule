@@ -382,26 +382,12 @@ void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf, OwnedArray <Libr
 
             for (int feature = 0; feature < numFeatures; ++feature)
             {
+                addAudioFeatureToRdf (rdf,
+                                      currentFeature->featureValues.getReference (channel).getReference (feature),
+                                      *(timelineNodes [channel]),
+                                      extractionNode);
             }
         }
-
-        //XmlElement *featureElement = element->createNewChildElement ("FeatureSet");
-        //featureElement->setAttribute ("FeatureName", featureName);
-        //featureElement->setAttribute ("FrameSize", defaultFrameSize);
-        //featureElement->setAttribute ("StepSize", defaultStepSize);
-
-        //for (int channel = 0; channel < numChannels; ++channel)
-        //{
-        //    XmlElement *channelElement = featureElement->createNewChildElement ("Channel");
-        //    channelElement->setAttribute ("Number", channel);
-
-        //    int numFeatures = currentFeature->featureValues.getReference (channel).size();
-
-        //    for (int feature = numFeatures - 1; feature >= 0; --feature)
-        //    {
-        //        addAudioFeatureToXmlElement (channelElement, currentFeature->featureValues.getReference (channel).getReference (feature));
-        //    }
-        //}
     }
 }
 
@@ -540,6 +526,38 @@ void SAFEFeatureExtractor::addAudioFeatureToRdf (LibrdfHolder &rdf, const AudioF
                                                  LibrdfHolder::NodePointer &timelineNode, 
                                                  LibrdfHolder::NodePointer &extractionNode)
 {
+    String time = String (feature.timeStamp);
+    String duration = String (feature.duration);
+    String values;
+    int numValues = feature.values.size();
+
+    for (int i = 0; i < numValues - 1; ++i)
+    {
+        values += doubleToString (feature.values [i]) + ", ";
+    }
+
+    if (numValues > 0)
+    {
+        values += doubleToString (feature.values.getLast());
+    }
+
+    // create a node for the event
+    String eventString = "event_" + String (eventNumber++);
+    LibrdfHolder::NodePointer eventNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
+                                                                    (const unsigned char*) eventString.toRawUTF8()),
+                                         librdf_free_node);
+
+    // create a node to hold time info 
+    LibrdfHolder::NodePointer timeNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+
+    // add some more triples
+    rdf.addTriple (eventNode, rdf.rdfType, rdf.eventEvent);
+    rdf.addTriple (eventNode, rdf.provWasGeneratedBy, extractionNode);
+    rdf.addTriple (eventNode, rdf.afFeature, values);
+    rdf.addTriple (eventNode, rdf.eventTime, timeNode);
+    rdf.addTriple (timeNode, rdf.rdfType, rdf.tlInstant);
+    rdf.addTriple (timeNode, rdf.tlOnTimeline, timelineNode);
+    rdf.addTriple (timeNode, rdf.tlAt, time);
 }
 
 String SAFEFeatureExtractor::doubleToString (double value)

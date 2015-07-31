@@ -30,6 +30,9 @@ LibrdfHolder::LibrdfHolder()
                                                       (const unsigned char*) "label"), librdf_free_node),
       rdfsComment (librdf_new_node_from_uri_local_name (world.get(), rdfs.get(), 
                                                         (const unsigned char*) "comment"), librdf_free_node),
+      // af namespace
+      afFeature (librdf_new_node_from_uri_local_name (world.get(), af.get(), 
+                                                      (const unsigned char*) "feature"), librdf_free_node),
       // afx namespace
       afxHasParameter (librdf_new_node_from_uri_local_name (world.get(), afx.get(), 
                                                             (const unsigned char*) "has_parameter"), librdf_free_node),
@@ -99,6 +102,15 @@ LibrdfHolder::LibrdfHolder()
                                                          (const unsigned char*) "onTimeLine"), librdf_free_node),
       tlTimeline (librdf_new_node_from_uri_local_name (world.get(), tl.get(), 
                                                        (const unsigned char*) "TimeLine"), librdf_free_node),
+      tlInstant (librdf_new_node_from_uri_local_name (world.get(), tl.get(), 
+                                                      (const unsigned char*) "Instant"), librdf_free_node),
+      tlAt (librdf_new_node_from_uri_local_name (world.get(), tl.get(), 
+                                                 (const unsigned char*) "at"), librdf_free_node),
+      // event namespace
+      eventEvent (librdf_new_node_from_uri_local_name (world.get(), event.get(), 
+                                                       (const unsigned char*) "Event"), librdf_free_node),
+      eventTime (librdf_new_node_from_uri_local_name (world.get(), event.get(), 
+                                                      (const unsigned char*) "time"), librdf_free_node),
       // safe namespace
       safeMetadata (librdf_new_node_from_uri_local_name (world.get(), safe.get(), 
                                                          (const unsigned char*) "Metadata"), librdf_free_node),
