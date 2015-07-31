@@ -355,40 +355,54 @@ void SAFEFeatureExtractor::addFeaturesToXmlElement (XmlElement *element)
     }
 }
 
-void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf)
+void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf, OwnedArray <LibrdfHolder::NodePointer> &signalNodes,
+                                             OwnedArray <LibrdfHolder::NodePointer> &timelineNodes)
 {
-    /*librdf_statement *rdfStatement;
+    // add libxtract features
+	for (int i = 0; i < libXtractFeatureValues.size(); ++i)
+    {
+        LibXtractFeature *currentFeature = libXtractFeatureValues [i];
+        String featureName = LibXtract::getFeatureName (currentFeature->featureNumber);
+        String frameSize = String (defaultFrameSize);
+        String stepSize = String (defaultStepSize);
 
-    rdfStatement = librdf_new_statement_from_nodes (rdf.world,
-                                                    librdf_new_node_from_uri_string (rdf.world, 
-                                                                                     (const unsigned char*) "http://example.org"),
-                                                    librdf_new_node_from_uri_string (rdf.world, 
-                                                                                     (const unsigned char*) 
-                                                                                         "http://purl.org/dc/elements/1.1/title"),
-                                                    librdf_new_node_from_blank_identifier (rdf.world, 
-                                                                                           (const unsigned char*) "blank"));
-    librdf_model_add_statement (rdf.model, rdfStatement);
-    librdf_free_statement (rdfStatement);
+        for (int channel = 0; channel < numChannels; ++channel)
+        {
+            String extractionString = "feature_extraction_" + String (extractionNumber++);
+            LibrdfHolder::NodePointer extractionNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
+                                                                         (const unsigned char*) extractionString.toRawUTF8()),
+                                                      librdf_free_node);
+            rdf.addTriple (extractionNode, rdf.rdfType, rdf.provActivity);
+            rdf.addTriple (extractionNode, rdf.rdfType, rdf.safeFeatureExtractionTransform);
+            rdf.addTriple (extractionNode, rdf.provWasAssociatedWith, rdf.safeLibxtract);
+            rdf.addTriple (extractionNode, rdf.provUsed, *(signalNodes [channel]));
+            rdf.addTriple (extractionNode, rdf.rdfsLabel, featureName);
+            
+            int numFeatures = currentFeature->featureValues.getReference (channel).size();
 
-    rdfStatement = librdf_new_statement_from_nodes (rdf.world,
-                                                    librdf_new_node_from_blank_identifier (rdf.world, 
-                                                                                           (const unsigned char*) "blank"),
-                                                    librdf_new_node_from_uri_string (rdf.world, 
-                                                                                     (const unsigned char*) 
-                                                                                         "http://purl.org/dc/elements/1.1/title"),
-                                                    librdf_new_node_from_literal (rdf.world, (const unsigned char*) "Test", NULL, 0));
-    librdf_model_add_statement (rdf.model, rdfStatement);
-    librdf_free_statement (rdfStatement);
+            for (int feature = 0; features < numFeatures; ++feature)
+            {
+            }
+        }
 
-    rdfStatement = librdf_new_statement_from_nodes (rdf.world,
-                                                    librdf_new_node_from_blank_identifier (rdf.world, 
-                                                                                           (const unsigned char*) "blank"),
-                                                    librdf_new_node_from_uri_string (rdf.world, 
-                                                                                     (const unsigned char*) 
-                                                                                         "http://purl.org/dc/elements/1.1/jam"),
-                                                    librdf_new_node_from_literal (rdf.world, (const unsigned char*) "Rhubarb", NULL, 0));
-    librdf_model_add_statement (rdf.model, rdfStatement);
-    librdf_free_statement (rdfStatement);*/
+        //XmlElement *featureElement = element->createNewChildElement ("FeatureSet");
+        //featureElement->setAttribute ("FeatureName", featureName);
+        //featureElement->setAttribute ("FrameSize", defaultFrameSize);
+        //featureElement->setAttribute ("StepSize", defaultStepSize);
+
+        //for (int channel = 0; channel < numChannels; ++channel)
+        //{
+        //    XmlElement *channelElement = featureElement->createNewChildElement ("Channel");
+        //    channelElement->setAttribute ("Number", channel);
+
+        //    int numFeatures = currentFeature->featureValues.getReference (channel).size();
+
+        //    for (int feature = numFeatures - 1; feature >= 0; --feature)
+        //    {
+        //        addAudioFeatureToXmlElement (channelElement, currentFeature->featureValues.getReference (channel).getReference (feature));
+        //    }
+        //}
+    }
 }
 
 void SAFEFeatureExtractor::cacheNewFFT (int size)
@@ -520,6 +534,11 @@ void SAFEFeatureExtractor::addAudioFeatureToXmlElement (XmlElement *element, con
     featureElement->setAttribute ("Values", valueString);
 
     element->prependChildElement (featureElement);
+}
+
+void SAFEFeatureExtractor::addAudioFeatureToRdf (LibrdfHolder &rdf, const AudioFeature &feature,
+                                                 NodePointer &timelineNode, NodePointer &extractionNode)
+{
 }
 
 String SAFEFeatureExtractor::doubleToString (double value)
@@ -1339,3 +1358,6 @@ void SAFEFeatureExtractor::clearVampFeatures()
         }
     }
 }
+
+unsigned long long SAFEFeatureExtractor::extractionNumber = 0;
+unsigned long long SAFEFeatureExtractor::eventNumber = 0;

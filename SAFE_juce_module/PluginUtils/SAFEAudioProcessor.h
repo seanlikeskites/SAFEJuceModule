@@ -513,6 +513,7 @@ private:
     //      Get plug-in type
     //==========================================================================
     String getPluginFormat();
+    String getPluginImplementationString();
 
     //==========================================================================
     //      Make String ok for use in XML

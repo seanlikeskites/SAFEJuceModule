@@ -45,34 +45,75 @@ public:
     UriPointer safe; /**< The safe ontology uri. */
     UriPointer safedb; /**< The safe database uri. */
     UriPointer studio; /**< The studio ontology uri. */
+    UriPointer tl; /**< The timeline ontology uri. */
+    UriPointer event; /**< The event ontology uri. */
 
     UriPointer xsdString; /**< The XML schema string uri. */
     UriPointer xsdInteger; /**< The XML schema integer uri. */
+    UriPointer xsdDouble; /**< The XML schema double uri. */
 
     //==========================================================================
     //      Useful Nodes
     //==========================================================================
+    NodePointer dummyUser;
+
+    // rdf namespace
     NodePointer rdfType;
+
+    // rdfs namespace
+    NodePointer rdfsLabel;
+    NodePointer rdfsComment;
+    
+    // afx namespace
     NodePointer afxImplementation;
-    NodePointer provSoftwareAgent;
     NodePointer afxHasParameter;
     NodePointer afxNumParameter;
-    NodePointer rdfsLabel;
     NodePointer afxDefaultValue;
     NodePointer afxMinValue;
     NodePointer afxMaxValue;
+    NodePointer afxParameterId;
+    NodePointer afxState;
+    NodePointer afxParameterSetting;
+    NodePointer afxParameterSettingItem;
+    NodePointer afxParameter;
+
+    // prov namespace
+    NodePointer provSoftwareAgent;
+    NodePointer provActivity;
+    NodePointer provWasGeneratedBy;
+    NodePointer provWasAssociatedWith;
+    NodePointer provAssociation;
+    NodePointer provAgent;
+    NodePointer provQualifiedAssociation;
+    NodePointer provHadRole;
+    NodePointer provUsed;
+    NodePointer provGenerated;
+
+    // qudt namespace
     NodePointer qudtQuantityValue;
     NodePointer qudtNumericValue;
-    NodePointer afxParameterId;
-    NodePointer provActivity;
+    NodePointer qudtValue;
+    
+    // studio namespace
     NodePointer studioTransform;
+    NodePointer studioEffect;
+
+    // mo namespace
+    NodePointer moSignal;
+    NodePointer moTime;
+
+    // tl namespace
+    NodePointer tlInterval;
+    NodePointer tlOnTimeline;
+    NodePointer tlTimeline;
+
+    // safe namespace
     NodePointer safeMetadata;
     NodePointer safeMetadataItem;
     NodePointer safeDescriptor;
     NodePointer safeDescriptorItem;
-    NodePointer rdfsComment;
-    NodePointer provWasGeneratedBy;
-    NodePointer provWasAssociatedWith;
+    NodePointer safeFeatureExtractionTransform;
+    NodePointer safeLibxtract;
 
     //==========================================================================
     //      Add triples

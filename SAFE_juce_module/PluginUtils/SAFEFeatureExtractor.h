@@ -110,12 +110,16 @@ public:
      *  It will put all the audio features which were recorded into the model
      *  of a LibrdfHolder object you pass it.
      */
-    void addFeaturesToRdf (LibrdfHolder &rdf);
+    void addFeaturesToRdf (LibrdfHolder &rdf, OwnedArray <LibrdfHolder::NodePointer> &signalNodes,
+                           OwnedArray <LibrdfHolder::NodePointer> &timelineNodes);
 
 private:
     bool initialised;
     int numChannels, defaultFrameSize, defaultStepSize;
     double fs;
+
+    // counters
+    static unsigned long long extractionNumber, eventNumber;
 
     // some fft bits
     std::map <int, ScopedPointer <FFT> > fftCache;
@@ -142,6 +146,8 @@ private:
     const AnalysisConfiguration* getVampPluginAnalysisConfiguration (int pluginIndex);
 
     void addAudioFeatureToXmlElement (XmlElement *element, const AudioFeature &feature);
+    void addAudioFeatureToRdf (LibrdfHolder &rdf, const AudioFeature &feature,
+                               NodePointer &timelineNode, NodePointer &extractionNode);
     String doubleToString (double value);
     
     //==========================================================================
