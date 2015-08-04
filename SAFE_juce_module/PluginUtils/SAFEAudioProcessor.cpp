@@ -384,7 +384,9 @@ WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, co
     rdf.addTriple (transformNode, rdf.studioEffect, pluginNode);
 
     // location metadata
-    LibrdfHolder::NodePointer locationNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+    LibrdfHolder::NodePointer locationNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
+                                                                                 (const unsigned char*) "location"), 
+                                            librdf_free_node);
     rdf.addTriple (transformNode, rdf.safeMetadata, locationNode);
     rdf.addTriple (locationNode, rdf.rdfType, rdf.safeMetadataItem);
     rdf.addTriple (locationNode, rdf.rdfsLabel, "location");
@@ -394,6 +396,32 @@ WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, co
     rdf.addTriple (locationNode, rdf.provWasGeneratedBy, locationActivityNode);
     rdf.addTriple (locationActivityNode, rdf.rdfType, rdf.provActivity);
     rdf.addTriple (locationActivityNode, rdf.provWasAssociatedWith, rdf.dummyUser);
+
+    // instrument metadata
+    LibrdfHolder::NodePointer instrumentNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
+                                                                                   (const unsigned char*) "instrument"), 
+                                              librdf_free_node);
+    rdf.addTriple (instrumentNode, rdf.rdfType, rdf.safeMetadataItem);
+    rdf.addTriple (instrumentNode, rdf.rdfsLabel, "instrument");
+    rdf.addTriple (instrumentNode, rdf.rdfsComment, metaData.instrument);
+
+    LibrdfHolder::NodePointer instrumentActivityNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+    rdf.addTriple (instrumentNode, rdf.provWasGeneratedBy, instrumentActivityNode);
+    rdf.addTriple (instrumentActivityNode, rdf.rdfType, rdf.provActivity);
+    rdf.addTriple (instrumentActivityNode, rdf.provWasAssociatedWith, rdf.dummyUser);
+
+    // genre metadata
+    LibrdfHolder::NodePointer genreNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
+                                                                              (const unsigned char*) "genre"), 
+                                         librdf_free_node);
+    rdf.addTriple (genreNode, rdf.rdfType, rdf.safeMetadataItem);
+    rdf.addTriple (genreNode, rdf.rdfsLabel, "genre");
+    rdf.addTriple (genreNode, rdf.rdfsComment, metaData.genre);
+
+    LibrdfHolder::NodePointer genreActivityNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+    rdf.addTriple (genreNode, rdf.provWasGeneratedBy, genreActivityNode);
+    rdf.addTriple (genreActivityNode, rdf.rdfType, rdf.provActivity);
+    rdf.addTriple (genreActivityNode, rdf.provWasAssociatedWith, rdf.dummyUser);
 
     // descriptors
     LibrdfHolder::NodePointer descriptorNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
@@ -494,6 +522,8 @@ WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, co
         rdf.addTriple (intervalNode, rdf.tlOnTimeline, *timelineNode);
         rdf.addTriple (*timelineNode, rdf.rdfType, rdf.tlTimeline);
         rdf.addTriple (transformNode, rdf.provUsed, *signalNode);
+        rdf.addTriple (*signalNode, rdf.safeMetadata, instrumentNode);
+        rdf.addTriple (*signalNode, rdf.safeMetadata, genreNode);
     }
 
     // outputs
@@ -525,6 +555,8 @@ WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, co
         rdf.addTriple (intervalNode, rdf.tlOnTimeline, *timelineNode);
         rdf.addTriple (*timelineNode, rdf.rdfType, rdf.tlTimeline);
         rdf.addTriple (transformNode, rdf.provGenerated, *signalNode);
+        rdf.addTriple (*signalNode, rdf.safeMetadata, instrumentNode);
+        rdf.addTriple (*signalNode, rdf.safeMetadata, genreNode);
     }
 
     // add the feature values
@@ -540,6 +572,13 @@ WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, co
     rdfFile = fopen (tempRdfFile.getFullPathName().toRawUTF8(), "w");
     librdf_serializer_serialize_model_to_file_handle (rdf.serializer.get(), rdfFile, NULL, rdf.model.get());
     fclose (rdfFile);
+
+    // zip it up for sending to the server
+    /*File zipFile = dataDirectory.getChildFile (JucePlugin_Name + String ("SemanticData.zip"));
+    FileOutputStream zipStream (zipFile);
+    ZipFile::Builder zipper;
+    zipper.addFile (tempRdfFile, 9);
+    zipper.writeToStream (zipStream, nullptr);*/
 
     return NoWarning;
 }
