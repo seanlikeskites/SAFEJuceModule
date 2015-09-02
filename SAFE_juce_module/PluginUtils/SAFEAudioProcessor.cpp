@@ -357,230 +357,6 @@ WarningID SAFEAudioProcessor::populateXmlElementWithSemanticData (XmlElement* el
 
 WarningID SAFEAudioProcessor::saveSemanticData (const String& newDescriptors, const SAFEMetaData& metaData)
 {
-    // run the analysis
-    WarningID warning = analyseRecordedSamples();
-
-    // rdf object
-    LibrdfHolder rdf;
-    
-    // create a node for the plug-in
-    String implementationName = getPluginImplementationString();
-    LibrdfHolder::NodePointer pluginNode (librdf_new_node_from_uri_local_name (rdf.world.get(),
-                                                                               rdf.afxdb.get(),
-                                                                               (const unsigned char*) implementationName.toRawUTF8()),
-                                          librdf_free_node);
-
-    // create a node for the transform
-    LibrdfHolder::NodePointer transformNode (librdf_new_node_from_uri_local_name (rdf.world.get(),
-                                                                                  rdf.safedb.get(),
-                                                                                  (const unsigned char*) "transform"),
-                                             librdf_free_node);
-
-    // details about the transform
-    rdf.addTriple (transformNode, rdf.rdfType, rdf.provActivity);
-    rdf.addTriple (transformNode, rdf.rdfType, rdf.studioTransform);
-    rdf.addTriple (transformNode, rdf.provWasAssociatedWith, rdf.dummyUser);
-    rdf.addTriple (transformNode, rdf.provWasAssociatedWith, pluginNode);
-    rdf.addTriple (transformNode, rdf.studioEffect, pluginNode);
-
-    // location metadata
-    LibrdfHolder::NodePointer locationNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
-                                                                                 (const unsigned char*) "location"), 
-                                            librdf_free_node);
-    rdf.addTriple (transformNode, rdf.safeMetadata, locationNode);
-    rdf.addTriple (locationNode, rdf.rdfType, rdf.safeMetadataItem);
-    rdf.addTriple (locationNode, rdf.rdfsLabel, "location");
-    rdf.addTriple (locationNode, rdf.rdfsComment, metaData.location);
-
-    LibrdfHolder::NodePointer locationActivityNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
-    rdf.addTriple (locationNode, rdf.provWasGeneratedBy, locationActivityNode);
-    rdf.addTriple (locationActivityNode, rdf.rdfType, rdf.provActivity);
-    rdf.addTriple (locationActivityNode, rdf.provWasAssociatedWith, rdf.dummyUser);
-
-    // instrument metadata
-    LibrdfHolder::NodePointer instrumentNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
-                                                                                   (const unsigned char*) "instrument"), 
-                                              librdf_free_node);
-    rdf.addTriple (instrumentNode, rdf.rdfType, rdf.safeMetadataItem);
-    rdf.addTriple (instrumentNode, rdf.rdfsLabel, "instrument");
-    rdf.addTriple (instrumentNode, rdf.rdfsComment, metaData.instrument);
-
-    LibrdfHolder::NodePointer instrumentActivityNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
-    rdf.addTriple (instrumentNode, rdf.provWasGeneratedBy, instrumentActivityNode);
-    rdf.addTriple (instrumentActivityNode, rdf.rdfType, rdf.provActivity);
-    rdf.addTriple (instrumentActivityNode, rdf.provWasAssociatedWith, rdf.dummyUser);
-
-    // genre metadata
-    LibrdfHolder::NodePointer genreNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
-                                                                              (const unsigned char*) "genre"), 
-                                         librdf_free_node);
-    rdf.addTriple (genreNode, rdf.rdfType, rdf.safeMetadataItem);
-    rdf.addTriple (genreNode, rdf.rdfsLabel, "genre");
-    rdf.addTriple (genreNode, rdf.rdfsComment, metaData.genre);
-
-    LibrdfHolder::NodePointer genreActivityNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
-    rdf.addTriple (genreNode, rdf.provWasGeneratedBy, genreActivityNode);
-    rdf.addTriple (genreActivityNode, rdf.rdfType, rdf.provActivity);
-    rdf.addTriple (genreActivityNode, rdf.provWasAssociatedWith, rdf.dummyUser);
-
-    // descriptors
-    LibrdfHolder::NodePointer descriptorNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
-    rdf.addTriple (transformNode, rdf.safeDescriptor, descriptorNode);
-    rdf.addTriple (descriptorNode, rdf.rdfType, rdf.safeDescriptorItem);
-    rdf.addTriple (descriptorNode, rdf.rdfsComment, newDescriptors);
-
-    LibrdfHolder::NodePointer descriptorActivityNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
-    rdf.addTriple (descriptorNode, rdf.provWasGeneratedBy, descriptorActivityNode);
-    rdf.addTriple (descriptorActivityNode, rdf.rdfType, rdf.provActivity);
-    rdf.addTriple (descriptorActivityNode, rdf.provWasAssociatedWith, rdf.dummyUser);
-
-    // plugin state
-    LibrdfHolder::NodePointer stateNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
-                                                                              (const unsigned char*) "exState_1"), librdf_free_node);
-    rdf.addTriple (transformNode, rdf.afxState, stateNode);
-
-    // get parameter settings
-    for (int i = 0; i < parameters.size(); ++i)
-    {
-        // make some nodes for it (too many I feel)
-        String parameterString  = "par" + String (i) + "Value";
-        LibrdfHolder::NodePointer parameterSettingNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL),
-                                                        librdf_free_node);
-        LibrdfHolder::NodePointer parameterNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
-        LibrdfHolder::NodePointer parameterIdNode (librdf_new_node_from_typed_literal (rdf.world.get(),
-                                                            (const unsigned char*) String (i).toRawUTF8(),
-                                                             NULL,
-                                                             rdf.xsdInteger.get()),
-                                                   librdf_free_node);
-        LibrdfHolder::NodePointer parameterValueNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
-                                                                        (const unsigned char*) parameterString.toRawUTF8()), 
-                                                      librdf_free_node);
-        String parameterValue = String (parameters [i]->getScaledValue());
-        LibrdfHolder::NodePointer parameterLiteralNode (librdf_new_node_from_typed_literal (rdf.world.get(),
-                                                                 (const unsigned char*) parameterValue.toRawUTF8(),
-                                                                 NULL,
-                                                                 rdf.xsdDouble.get()),
-                                                        librdf_free_node);
-
-        // link those nodes together
-        rdf.addTriple (stateNode, rdf.afxParameterSetting, parameterSettingNode);
-        rdf.addTriple (parameterSettingNode, rdf.rdfType, rdf.afxParameterSettingItem);
-        rdf.addTriple (parameterSettingNode, rdf.afxParameter, parameterNode);
-        rdf.addTriple (parameterNode, rdf.afxParameterId, parameterIdNode);
-        rdf.addTriple (parameterNode, rdf.qudtValue, parameterValueNode);
-        rdf.addTriple (parameterValueNode, rdf.qudtNumericValue, parameterLiteralNode);
-    }
-
-    // associations
-    LibrdfHolder::NodePointer pluginAssociationNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
-                                                                                          (const unsigned char*) "association_1"),
-                                                     librdf_free_node);
-    LibrdfHolder::NodePointer pluginRoleNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
-    rdf.addTriple (pluginAssociationNode, rdf.rdfType, rdf.provAssociation);
-    rdf.addTriple (pluginAssociationNode, rdf.provAgent, pluginNode);
-    rdf.addTriple (pluginAssociationNode, rdf.provQualifiedAssociation, transformNode);
-    rdf.addTriple (pluginAssociationNode, rdf.provHadRole, pluginRoleNode);
-    rdf.addTriple (pluginRoleNode, rdf.rdfsComment, "audio effect plug-in");
-
-    LibrdfHolder::NodePointer userAssociationNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
-                                                                                        (const unsigned char*) "association_2"),
-                                                   librdf_free_node);
-    LibrdfHolder::NodePointer userRoleNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
-    rdf.addTriple (userAssociationNode, rdf.rdfType, rdf.provAssociation);
-    rdf.addTriple (userAssociationNode, rdf.provAgent, rdf.dummyUser);
-    rdf.addTriple (userAssociationNode, rdf.provQualifiedAssociation, transformNode);
-    rdf.addTriple (userAssociationNode, rdf.provHadRole, userRoleNode);
-    rdf.addTriple (userRoleNode, rdf.rdfsComment, "configure/apply effect plug-in");
-
-    // signal and timeline nodes
-    // inputs
-    OwnedArray <LibrdfHolder::NodePointer> inputSignalNodes;
-    OwnedArray <LibrdfHolder::NodePointer> inputTimelineNodes;
-
-    for (int i = 0; i < numInputs; ++i)
-    {
-        String signalName = "input_signal_" + String (i);
-        String timelineName = "input_signal_timeline_" + String (i);
-        String signalString = "input channel " + String (i);
-
-        LibrdfHolder::NodePointer *signalNode = 
-          inputSignalNodes.add (new LibrdfHolder::NodePointer (librdf_new_node_from_uri_local_name (rdf.world.get(), 
-                                                                                  rdf.safedb.get(),
-                                                                                  (const unsigned char*) signalName.toRawUTF8()),
-                                                               librdf_free_node));
-        LibrdfHolder::NodePointer *timelineNode = 
-          inputTimelineNodes.add (new LibrdfHolder::NodePointer (librdf_new_node_from_uri_local_name (rdf.world.get(), 
-                                                                                    rdf.safedb.get(),
-                                                                                    (const unsigned char*) timelineName.toRawUTF8()),
-                                                                 librdf_free_node));
-        LibrdfHolder::NodePointer intervalNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
-
-        rdf.addTriple (*signalNode, rdf.rdfType, rdf.moSignal);
-        rdf.addTriple (*signalNode, rdf.rdfsLabel, signalString);
-        rdf.addTriple (*signalNode, rdf.moTime, intervalNode);
-        rdf.addTriple (intervalNode, rdf.rdfType, rdf.tlInterval);
-        rdf.addTriple (intervalNode, rdf.tlOnTimeline, *timelineNode);
-        rdf.addTriple (*timelineNode, rdf.rdfType, rdf.tlTimeline);
-        rdf.addTriple (transformNode, rdf.provUsed, *signalNode);
-        rdf.addTriple (*signalNode, rdf.safeMetadata, instrumentNode);
-        rdf.addTriple (*signalNode, rdf.safeMetadata, genreNode);
-    }
-
-    // outputs
-    OwnedArray <LibrdfHolder::NodePointer> outputSignalNodes;
-    OwnedArray <LibrdfHolder::NodePointer> outputTimelineNodes;
-
-    for (int i = 0; i < numOutputs; ++i)
-    {
-        String signalName = "output_signal_" + String (i);
-        String timelineName = "output_signal_timeline_" + String (i);
-        String signalString = "output channel " + String (i);
-
-        LibrdfHolder::NodePointer *signalNode = 
-          outputSignalNodes.add (new LibrdfHolder::NodePointer (librdf_new_node_from_uri_local_name (rdf.world.get(), 
-                                                                                  rdf.safedb.get(),
-                                                                                  (const unsigned char*) signalName.toRawUTF8()),
-                                                                librdf_free_node));
-        LibrdfHolder::NodePointer *timelineNode = 
-          outputTimelineNodes.add (new LibrdfHolder::NodePointer (librdf_new_node_from_uri_local_name (rdf.world.get(), 
-                                                                                    rdf.safedb.get(),
-                                                                                    (const unsigned char*) timelineName.toRawUTF8()),
-                                                                  librdf_free_node));
-        LibrdfHolder::NodePointer intervalNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
-
-        rdf.addTriple (*signalNode, rdf.rdfType, rdf.moSignal);
-        rdf.addTriple (*signalNode, rdf.rdfsLabel, signalString);
-        rdf.addTriple (*signalNode, rdf.moTime, intervalNode);
-        rdf.addTriple (intervalNode, rdf.rdfType, rdf.tlInterval);
-        rdf.addTriple (intervalNode, rdf.tlOnTimeline, *timelineNode);
-        rdf.addTriple (*timelineNode, rdf.rdfType, rdf.tlTimeline);
-        rdf.addTriple (transformNode, rdf.provGenerated, *signalNode);
-        rdf.addTriple (*signalNode, rdf.safeMetadata, instrumentNode);
-        rdf.addTriple (*signalNode, rdf.safeMetadata, genreNode);
-    }
-
-    // add the feature values
-    unprocessedFeatureExtractor.addFeaturesToRdf (rdf, inputSignalNodes, inputTimelineNodes);
-    processedFeatureExtractor.addFeaturesToRdf (rdf, outputSignalNodes, outputTimelineNodes);
-
-    // save it to a file
-    File documentsDirectory (File::getSpecialLocation (File::userDocumentsDirectory));
-    File dataDirectory (documentsDirectory.getChildFile ("SAFEPluginData"));
-    File tempRdfFile = dataDirectory.getChildFile (JucePlugin_Name + String ("Temp.ttl"));
-
-    FILE *rdfFile;
-    rdfFile = fopen (tempRdfFile.getFullPathName().toRawUTF8(), "w");
-    librdf_serializer_serialize_model_to_file_handle (rdf.serializer.get(), rdfFile, NULL, rdf.model.get());
-    fclose (rdfFile);
-
-    // zip it up for sending to the server
-    /*File zipFile = dataDirectory.getChildFile (JucePlugin_Name + String ("SemanticData.zip"));
-    FileOutputStream zipStream (zipFile);
-    ZipFile::Builder zipper;
-    zipper.addFile (tempRdfFile, 9);
-    zipper.writeToStream (zipStream, nullptr);*/
-
-    return NoWarning;
 }
 
 WarningID SAFEAudioProcessor::loadSemanticData (const String& descriptor)
@@ -628,74 +404,279 @@ WarningID SAFEAudioProcessor::loadSemanticData (const String& descriptor)
 
 WarningID SAFEAudioProcessor::sendDataToServer (const String& newDescriptors, const SAFEMetaData& metaData)
 {
-    XmlElement descriptorElement ("SemanticData");
+    // run the analysis
+    WarningID warning = analyseRecordedSamples();
 
-    descriptorElement.setAttribute ("Descriptors", newDescriptors);
-
-    WarningID warning = populateXmlElementWithSemanticData (&descriptorElement, metaData);
-
-    if (warning != NoWarning)
-    {
-        return warning;
-    }
+    // rdf object
+    LibrdfHolder rdf;
     
-    // save to file
+    // create a node for the plug-in
+    String implementationName = getPluginImplementationString();
+    LibrdfHolder::NodePointer pluginNode (librdf_new_node_from_uri_local_name (rdf.world.get(),
+                                                                               rdf.afxdb.get(),
+                                                                               (const unsigned char*) implementationName.toRawUTF8()),
+                                          librdf_free_node);
+
+    // create a node for the transform
+    LibrdfHolder::NodePointer transformNode (librdf_new_node_from_uri_local_name (rdf.world.get(),
+                                                                                  rdf.safedb.get(),
+                                                                                  (const unsigned char*) "transform_@uniqueID"),
+                                             librdf_free_node);
+
+    // details about the transform
+    rdf.addTriple (transformNode, rdf.rdfType, rdf.provActivity);
+    rdf.addTriple (transformNode, rdf.rdfType, rdf.studioTransform);
+    rdf.addTriple (transformNode, rdf.provWasAssociatedWith, rdf.dummyUser);
+    rdf.addTriple (transformNode, rdf.provWasAssociatedWith, pluginNode);
+    rdf.addTriple (transformNode, rdf.studioEffect, pluginNode);
+
+    // location metadata
+    LibrdfHolder::NodePointer locationNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
+                                                                                 (const unsigned char*) "location_@uniqueID"), 
+                                            librdf_free_node);
+    rdf.addTriple (transformNode, rdf.safeMetadata, locationNode);
+    rdf.addTriple (locationNode, rdf.rdfType, rdf.safeMetadataItem);
+    rdf.addTriple (locationNode, rdf.rdfsLabel, "location");
+    rdf.addTriple (locationNode, rdf.rdfsComment, metaData.location);
+
+    LibrdfHolder::NodePointer locationActivityNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+    rdf.addTriple (locationNode, rdf.provWasGeneratedBy, locationActivityNode);
+    rdf.addTriple (locationActivityNode, rdf.rdfType, rdf.provActivity);
+    rdf.addTriple (locationActivityNode, rdf.provWasAssociatedWith, rdf.dummyUser);
+
+    // instrument metadata
+    LibrdfHolder::NodePointer instrumentNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
+                                                                                   (const unsigned char*) "instrument_@uniqueID"), 
+                                              librdf_free_node);
+    rdf.addTriple (instrumentNode, rdf.rdfType, rdf.safeMetadataItem);
+    rdf.addTriple (instrumentNode, rdf.rdfsLabel, "instrument");
+    rdf.addTriple (instrumentNode, rdf.rdfsComment, metaData.instrument);
+
+    LibrdfHolder::NodePointer instrumentActivityNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+    rdf.addTriple (instrumentNode, rdf.provWasGeneratedBy, instrumentActivityNode);
+    rdf.addTriple (instrumentActivityNode, rdf.rdfType, rdf.provActivity);
+    rdf.addTriple (instrumentActivityNode, rdf.provWasAssociatedWith, rdf.dummyUser);
+
+    // genre metadata
+    LibrdfHolder::NodePointer genreNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
+                                                                              (const unsigned char*) "genre_@uniqueID"), 
+                                         librdf_free_node);
+    rdf.addTriple (genreNode, rdf.rdfType, rdf.safeMetadataItem);
+    rdf.addTriple (genreNode, rdf.rdfsLabel, "genre");
+    rdf.addTriple (genreNode, rdf.rdfsComment, metaData.genre);
+
+    LibrdfHolder::NodePointer genreActivityNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+    rdf.addTriple (genreNode, rdf.provWasGeneratedBy, genreActivityNode);
+    rdf.addTriple (genreActivityNode, rdf.rdfType, rdf.provActivity);
+    rdf.addTriple (genreActivityNode, rdf.provWasAssociatedWith, rdf.dummyUser);
+
+    // descriptors
+    LibrdfHolder::NodePointer descriptorNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+    rdf.addTriple (transformNode, rdf.safeDescriptor, descriptorNode);
+    rdf.addTriple (descriptorNode, rdf.rdfType, rdf.safeDescriptorItem);
+    rdf.addTriple (descriptorNode, rdf.rdfsComment, newDescriptors);
+
+    LibrdfHolder::NodePointer descriptorActivityNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+    rdf.addTriple (descriptorNode, rdf.provWasGeneratedBy, descriptorActivityNode);
+    rdf.addTriple (descriptorActivityNode, rdf.rdfType, rdf.provActivity);
+    rdf.addTriple (descriptorActivityNode, rdf.provWasAssociatedWith, rdf.dummyUser);
+
+    // plugin state
+    LibrdfHolder::NodePointer stateNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
+                                                                              (const unsigned char*) "exState_@uniqueID"), librdf_free_node);
+    rdf.addTriple (transformNode, rdf.afxState, stateNode);
+
+    // get parameter settings
+    for (int i = 0; i < parameters.size(); ++i)
+    {
+        // make some nodes for it (too many I feel)
+        String parameterString  = "par" + String (i) + "Value_@uniqueID";
+        LibrdfHolder::NodePointer parameterSettingNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL),
+                                                        librdf_free_node);
+        LibrdfHolder::NodePointer parameterNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+        LibrdfHolder::NodePointer parameterIdNode (librdf_new_node_from_typed_literal (rdf.world.get(),
+                                                            (const unsigned char*) String (i).toRawUTF8(),
+                                                             NULL,
+                                                             rdf.xsdInteger.get()),
+                                                   librdf_free_node);
+        LibrdfHolder::NodePointer parameterValueNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
+                                                                        (const unsigned char*) parameterString.toRawUTF8()), 
+                                                      librdf_free_node);
+        String parameterValue = String (parameters [i]->getScaledValue());
+        LibrdfHolder::NodePointer parameterLiteralNode (librdf_new_node_from_typed_literal (rdf.world.get(),
+                                                                 (const unsigned char*) parameterValue.toRawUTF8(),
+                                                                 NULL,
+                                                                 rdf.xsdDouble.get()),
+                                                        librdf_free_node);
+
+        // link those nodes together
+        rdf.addTriple (stateNode, rdf.afxParameterSetting, parameterSettingNode);
+        rdf.addTriple (parameterSettingNode, rdf.rdfType, rdf.afxParameterSettingItem);
+        rdf.addTriple (parameterSettingNode, rdf.afxParameter, parameterNode);
+        rdf.addTriple (parameterNode, rdf.afxParameterId, parameterIdNode);
+        rdf.addTriple (parameterNode, rdf.qudtValue, parameterValueNode);
+        rdf.addTriple (parameterValueNode, rdf.qudtNumericValue, parameterLiteralNode);
+    }
+
+    // associations
+    LibrdfHolder::NodePointer pluginAssociationNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
+                                                                                          (const unsigned char*) "association_1_@uniqueID"),
+                                                     librdf_free_node);
+    LibrdfHolder::NodePointer pluginRoleNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+    rdf.addTriple (pluginAssociationNode, rdf.rdfType, rdf.provAssociation);
+    rdf.addTriple (pluginAssociationNode, rdf.provAgent, pluginNode);
+    rdf.addTriple (pluginAssociationNode, rdf.provQualifiedAssociation, transformNode);
+    rdf.addTriple (pluginAssociationNode, rdf.provHadRole, pluginRoleNode);
+    rdf.addTriple (pluginRoleNode, rdf.rdfsComment, "audio effect plug-in");
+
+    LibrdfHolder::NodePointer userAssociationNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
+                                                                                        (const unsigned char*) "association_2_@uniqueID"),
+                                                   librdf_free_node);
+    LibrdfHolder::NodePointer userRoleNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+    rdf.addTriple (userAssociationNode, rdf.rdfType, rdf.provAssociation);
+    rdf.addTriple (userAssociationNode, rdf.provAgent, rdf.dummyUser);
+    rdf.addTriple (userAssociationNode, rdf.provQualifiedAssociation, transformNode);
+    rdf.addTriple (userAssociationNode, rdf.provHadRole, userRoleNode);
+    rdf.addTriple (userRoleNode, rdf.rdfsComment, "configure/apply effect plug-in");
+
+    // signal and timeline nodes
+    // inputs
+    OwnedArray <LibrdfHolder::NodePointer> inputSignalNodes;
+    OwnedArray <LibrdfHolder::NodePointer> inputTimelineNodes;
+
+    for (int i = 0; i < numInputs; ++i)
+    {
+        String signalName = "input_signal_" + String (i) + "_@uniqueID";
+        String timelineName = "input_signal_timeline_" + String (i) + "_@uniqueID";
+        String signalString = "input channel " + String (i);
+
+        LibrdfHolder::NodePointer *signalNode = 
+          inputSignalNodes.add (new LibrdfHolder::NodePointer (librdf_new_node_from_uri_local_name (rdf.world.get(), 
+                                                                                  rdf.safedb.get(),
+                                                                                  (const unsigned char*) signalName.toRawUTF8()),
+                                                               librdf_free_node));
+        LibrdfHolder::NodePointer *timelineNode = 
+          inputTimelineNodes.add (new LibrdfHolder::NodePointer (librdf_new_node_from_uri_local_name (rdf.world.get(), 
+                                                                                    rdf.safedb.get(),
+                                                                                    (const unsigned char*) timelineName.toRawUTF8()),
+                                                                 librdf_free_node));
+        LibrdfHolder::NodePointer intervalNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+
+        rdf.addTriple (*signalNode, rdf.rdfType, rdf.moSignal);
+        rdf.addTriple (*signalNode, rdf.rdfsLabel, signalString);
+        rdf.addTriple (*signalNode, rdf.moTime, intervalNode);
+        rdf.addTriple (intervalNode, rdf.rdfType, rdf.tlInterval);
+        rdf.addTriple (intervalNode, rdf.tlOnTimeline, *timelineNode);
+        rdf.addTriple (*timelineNode, rdf.rdfType, rdf.tlTimeline);
+        rdf.addTriple (transformNode, rdf.provUsed, *signalNode);
+        rdf.addTriple (*signalNode, rdf.safeMetadata, instrumentNode);
+        rdf.addTriple (*signalNode, rdf.safeMetadata, genreNode);
+    }
+
+    // outputs
+    OwnedArray <LibrdfHolder::NodePointer> outputSignalNodes;
+    OwnedArray <LibrdfHolder::NodePointer> outputTimelineNodes;
+
+    for (int i = 0; i < numOutputs; ++i)
+    {
+        String signalName = "output_signal_" + String (i) + "_@uniqueID";
+        String timelineName = "output_signal_timeline_" + String (i) + "_@uniqueID";
+        String signalString = "output channel " + String (i);
+
+        LibrdfHolder::NodePointer *signalNode = 
+          outputSignalNodes.add (new LibrdfHolder::NodePointer (librdf_new_node_from_uri_local_name (rdf.world.get(), 
+                                                                                  rdf.safedb.get(),
+                                                                                  (const unsigned char*) signalName.toRawUTF8()),
+                                                                librdf_free_node));
+        LibrdfHolder::NodePointer *timelineNode = 
+          outputTimelineNodes.add (new LibrdfHolder::NodePointer (librdf_new_node_from_uri_local_name (rdf.world.get(), 
+                                                                                    rdf.safedb.get(),
+                                                                                    (const unsigned char*) timelineName.toRawUTF8()),
+                                                                  librdf_free_node));
+        LibrdfHolder::NodePointer intervalNode (librdf_new_node_from_blank_identifier (rdf.world.get(), NULL), librdf_free_node);
+
+        rdf.addTriple (*signalNode, rdf.rdfType, rdf.moSignal);
+        rdf.addTriple (*signalNode, rdf.rdfsLabel, signalString);
+        rdf.addTriple (*signalNode, rdf.moTime, intervalNode);
+        rdf.addTriple (intervalNode, rdf.rdfType, rdf.tlInterval);
+        rdf.addTriple (intervalNode, rdf.tlOnTimeline, *timelineNode);
+        rdf.addTriple (*timelineNode, rdf.rdfType, rdf.tlTimeline);
+        rdf.addTriple (transformNode, rdf.provGenerated, *signalNode);
+        rdf.addTriple (*signalNode, rdf.safeMetadata, instrumentNode);
+        rdf.addTriple (*signalNode, rdf.safeMetadata, genreNode);
+    }
+
+    // add the feature values
+    unprocessedFeatureExtractor.addFeaturesToRdf (rdf, inputSignalNodes, inputTimelineNodes);
+    processedFeatureExtractor.addFeaturesToRdf (rdf, outputSignalNodes, outputTimelineNodes);
+
+    // save it to a file
     File documentsDirectory (File::getSpecialLocation (File::userDocumentsDirectory));
     File dataDirectory (documentsDirectory.getChildFile ("SAFEPluginData"));
+    File tempRdfFile = dataDirectory.getChildFile ("Temp.ttl");
 
-    File tempDataFile = dataDirectory.getChildFile ("tempData.xml");
+    FILE *rdfFile;
+    rdfFile = fopen (tempRdfFile.getFullPathName().toRawUTF8(), "w");
+    librdf_serializer_serialize_model_to_file_handle (rdf.serializer.get(), rdfFile, NULL, rdf.model.get());
+    fclose (rdfFile);
 
-    descriptorElement.writeToFile (tempDataFile, "");
+    // zip it up for sending to the server
+    File zipFile = dataDirectory.getChildFile ("SemanticData.zip");
+    FileOutputStream zipStream (zipFile);
+    ZipFile::Builder zipper;
+    zipper.addFile (tempRdfFile, 9);
+    zipper.writeToStream (zipStream, nullptr);
 
-    #if JUCE_LINUX
-    CURLcode res;
+    //#if JUCE_LINUX
+    //CURLcode res;
  
-    struct curl_httppost *formpost=NULL;
-    struct curl_httppost *lastptr=NULL;
-    struct curl_slist *headerlist=NULL;
-    static const char buf[] = "Expect:";
+    //struct curl_httppost *formpost=NULL;
+    //struct curl_httppost *lastptr=NULL;
+    //struct curl_slist *headerlist=NULL;
+    //static const char buf[] = "Expect:";
  
-    /* Fill in the file upload field */ 
-    curl_formadd(&formpost,
-                 &lastptr,
-                 CURLFORM_COPYNAME, "DataFile",
-                 CURLFORM_FILE, tempDataFile.getFullPathName().toRawUTF8(),
-                 CURLFORM_END);
+    ///* Fill in the file upload field */ 
+    //curl_formadd(&formpost,
+    //             &lastptr,
+    //             CURLFORM_COPYNAME, "turtles",
+    //             CURLFORM_FILE, zipFile.getFullPathName().toRawUTF8(),
+    //             CURLFORM_END);
  
-    /* Fill in the filename field */ 
-    curl_formadd(&formpost,
-                 &lastptr,
-                 CURLFORM_COPYNAME, "DataFile",
-                 CURLFORM_COPYCONTENTS, tempDataFile.getFullPathName().toRawUTF8(),
-                 CURLFORM_END);
+    ///* Fill in the filename field */ 
+    //curl_formadd(&formpost,
+    //             &lastptr,
+    //             CURLFORM_COPYNAME, "turtles",
+    //             CURLFORM_COPYCONTENTS, zipFile.getFullPathName().toRawUTF8(),
+    //             CURLFORM_END);
  
  
-    /* Fill in the submit field too, even if this is rarely needed */ 
-    curl_formadd(&formpost,
-                 &lastptr,
-                 CURLFORM_COPYNAME, "submit",
-                 CURLFORM_COPYCONTENTS, "send",
-                 CURLFORM_END);
+    ///* Fill in the submit field too, even if this is rarely needed */ 
+    //curl_formadd(&formpost,
+    //             &lastptr,
+    //             CURLFORM_COPYNAME, "submit",
+    //             CURLFORM_COPYCONTENTS, "send",
+    //             CURLFORM_END);
  
-    headerlist = curl_slist_append(headerlist, buf);
-    if(curl) 
-    {
-        curl_easy_setopt(curl->curl, CURLOPT_URL, "http://193.60.133.151/newsafe/uploadterm.php");
-        curl_easy_setopt(curl->curl, CURLOPT_HTTPPOST, formpost);
+    //headerlist = curl_slist_append(headerlist, buf);
+    //if(curl) 
+    //{
+    //    curl_easy_setopt(curl->curl, CURLOPT_URL, "http://193.60.133.151/pokemon");
+    //    curl_easy_setopt(curl->curl, CURLOPT_HTTPPOST, formpost);
  
-        res = curl_easy_perform(curl->curl);
+    //    res = curl_easy_perform(curl->curl);
  
-        curl_formfree(formpost);
-        curl_slist_free_all (headerlist);
-    }
-    #else
-    URL dataUpload ("http://193.60.133.151/newsafe/uploadterm.php");
-    dataUpload = dataUpload.withFileToUpload ("DataFile", tempDataFile, "text/xml");
+    //    curl_formfree(formpost);
+    //    curl_slist_free_all (headerlist);
+    //}
+    //#else
+    URL dataUpload ("http://193.60.133.151/pokemon/index.php");
+    dataUpload = dataUpload.withFileToUpload ("turtles", zipFile, "text/xml");
 
     ScopedPointer <InputStream> stream (dataUpload.createInputStream (true));
-    #endif
+    //#endif
 
-    tempDataFile.deleteFile();
+    //tempRdfFile.deleteFile();
+    //zipFile.deleteFile();
 
     return warning;
 }

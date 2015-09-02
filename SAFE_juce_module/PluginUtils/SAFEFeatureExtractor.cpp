@@ -368,7 +368,7 @@ void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf, OwnedArray <Libr
 
         for (int channel = 0; channel < numChannels; ++channel)
         {
-            String extractionString = "feature_extraction_" + String (extractionNumber++);
+            String extractionString = "feature_extraction_" + String (extractionNumber++) + "_@uniqueID";
             LibrdfHolder::NodePointer extractionNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
                                                                          (const unsigned char*) extractionString.toRawUTF8()),
                                                       librdf_free_node);
@@ -403,7 +403,7 @@ void SAFEFeatureExtractor::addFeaturesToRdf (LibrdfHolder &rdf, OwnedArray <Libr
         for (int feature = 0; feature < numFeatures; ++feature)
         {
             String featureName = String ("Vamp ") + currentPlugin->outputs [feature].name;
-            String extractionString = "feature_extraction_" + String (extractionNumber++);
+            String extractionString = "feature_extraction_" + String (extractionNumber++) + "_@uniqueID";
             LibrdfHolder::NodePointer extractionNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
                                                                          (const unsigned char*) extractionString.toRawUTF8()),
                                                       librdf_free_node);
@@ -584,7 +584,7 @@ void SAFEFeatureExtractor::addAudioFeatureToRdf (LibrdfHolder &rdf, const AudioF
     }
 
     // create a node for the event
-    String eventString = "event_" + String (eventNumber++);
+    String eventString = "event_" + String (eventNumber++) + "_@uniqueID";
     LibrdfHolder::NodePointer eventNode (librdf_new_node_from_uri_local_name (rdf.world.get(), rdf.safedb.get(),
                                                                     (const unsigned char*) eventString.toRawUTF8()),
                                          librdf_free_node);
