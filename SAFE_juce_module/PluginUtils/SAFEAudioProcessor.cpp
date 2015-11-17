@@ -622,61 +622,70 @@ WarningID SAFEAudioProcessor::sendDataToServer (const String& newDescriptors, co
 
     // zip it up for sending to the server
     File zipFile = dataDirectory.getChildFile ("SemanticData.zip");
-    FileOutputStream zipStream (zipFile);
-    ZipFile::Builder zipper;
-    zipper.addFile (tempRdfFile, 9);
-    zipper.writeToStream (zipStream, nullptr);
 
-    //#if JUCE_LINUX
-    //CURLcode res;
+    {
+        FileOutputStream zipStream (zipFile);
+        ZipFile::Builder zipper;
+        zipper.addFile (tempRdfFile, 9);
+        double progress = 0;
+        zipper.writeToStream (zipStream, &progress);
+        
+        while (progress < 1.0)
+        {
+            Thread::sleep (100);
+        }
+    }
+
+    #if JUCE_LINUX
+    CURLcode res;
  
-    //struct curl_httppost *formpost=NULL;
-    //struct curl_httppost *lastptr=NULL;
-    //struct curl_slist *headerlist=NULL;
-    //static const char buf[] = "Expect:";
+    struct curl_httppost *formpost=NULL;
+    struct curl_httppost *lastptr=NULL;
+    struct curl_slist *headerlist=NULL;
+    static const char buf[] = "Expect:";
  
-    ///* Fill in the file upload field */ 
-    //curl_formadd(&formpost,
-    //             &lastptr,
-    //             CURLFORM_COPYNAME, "turtles",
-    //             CURLFORM_FILE, zipFile.getFullPathName().toRawUTF8(),
-    //             CURLFORM_END);
+    /* Fill in the file upload field */ 
+    curl_formadd(&formpost,
+                 &lastptr,
+                 CURLFORM_COPYNAME, "turtles",
+                 CURLFORM_FILE, zipFile.getFullPathName().toRawUTF8(),
+                 CURLFORM_END);
  
-    ///* Fill in the filename field */ 
-    //curl_formadd(&formpost,
-    //             &lastptr,
-    //             CURLFORM_COPYNAME, "turtles",
-    //             CURLFORM_COPYCONTENTS, zipFile.getFullPathName().toRawUTF8(),
-    //             CURLFORM_END);
+    /* Fill in the filename field */ 
+    curl_formadd(&formpost,
+                 &lastptr,
+                 CURLFORM_COPYNAME, "turtles",
+                 CURLFORM_COPYCONTENTS, zipFile.getFullPathName().toRawUTF8(),
+                 CURLFORM_END);
  
  
-    ///* Fill in the submit field too, even if this is rarely needed */ 
-    //curl_formadd(&formpost,
-    //             &lastptr,
-    //             CURLFORM_COPYNAME, "submit",
-    //             CURLFORM_COPYCONTENTS, "send",
-    //             CURLFORM_END);
+    /* Fill in the submit field too, even if this is rarely needed */ 
+    curl_formadd(&formpost,
+                 &lastptr,
+                 CURLFORM_COPYNAME, "submit",
+                 CURLFORM_COPYCONTENTS, "send",
+                 CURLFORM_END);
  
-    //headerlist = curl_slist_append(headerlist, buf);
-    //if(curl) 
-    //{
-    //    curl_easy_setopt(curl->curl, CURLOPT_URL, "http://193.60.133.151/pokemon");
-    //    curl_easy_setopt(curl->curl, CURLOPT_HTTPPOST, formpost);
+    headerlist = curl_slist_append(headerlist, buf);
+    if(curl) 
+    {
+        curl_easy_setopt(curl->curl, CURLOPT_URL, "http://193.60.133.151/pokemon");
+        curl_easy_setopt(curl->curl, CURLOPT_HTTPPOST, formpost);
  
-    //    res = curl_easy_perform(curl->curl);
+        res = curl_easy_perform(curl->curl);
  
-    //    curl_formfree(formpost);
-    //    curl_slist_free_all (headerlist);
-    //}
-    //#else
+        curl_formfree(formpost);
+        curl_slist_free_all (headerlist);
+    }
+    #else
     URL dataUpload ("http://193.60.133.151/pokemon/index.php");
-    dataUpload = dataUpload.withFileToUpload ("turtles", zipFile, "text/xml");
+    dataUpload = dataUpload.withFileToUpload ("turtles", zipFile, "");
 
     ScopedPointer <InputStream> stream (dataUpload.createInputStream (true));
-    //#endif
+    #endif
 
-    //tempRdfFile.deleteFile();
-    //zipFile.deleteFile();
+    tempRdfFile.deleteFile();
+    zipFile.deleteFile();
 
     return warning;
 }

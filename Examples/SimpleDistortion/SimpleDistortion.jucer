@@ -9,7 +9,7 @@
               pluginSilenceInIsSilenceOut="1" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="SimpleDistortionAU" pluginRTASCategory=""
               aaxIdentifier="com.SAFE.SimpleDistortion" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
-              jucerVersion="3.2.0">
+              jucerVersion="4.0.1">
   <MAINGROUP id="yaaV16" name="SimpleDistortion">
     <GROUP id="{8384372B-4402-92B2-D907-DFFFAF57769A}" name="Source">
       <FILE id="JuLjFF" name="PluginProcessor.cpp" compile="1" resource="0"
